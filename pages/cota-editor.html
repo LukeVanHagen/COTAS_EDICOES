@@ -25,160 +25,257 @@
 <body>
 
 
-<header class='header' id="header-container"></header>
-
-<div class="container mt-4">
-
-    <div class="mb-3">
-        <label class="form-label">Tick da Linha:</label>
-        <input type="number" class="form-control" id="tick" value="">
+    <header class='header' id="header-container"></header>
+    
+    <div class="container mt-4">
+    
+        <div class="mb-3">
+            <label class="form-label">Nome:</label>
+            <input type="text" class="form-control" id="nome" value="">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Estação:</label>
+            <input type="text" class="form-control" id="estacao" value="">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Tick da Linha:</label>
+            <input type="number" class="form-control" id="tick" value="">
+        </div>
+    
+        <!-- Tabela Pai -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center tabela-pai">
+                <thead class="table-dark">
+                    <tr>
+    <!--                     <th colspan="5">Tabela 1 - Valores Originais e Incrementos</th>
+                        <th colspan="2">Tabela 2 - Incrementos Extras</th>
+                        <th colspan="4">Tabela 3 - Resultado Final</th> -->
+                    </tr>
+                    <tr>
+                        <!-- Tabela 1 -->
+                        <th>Campo</th>
+                        <th>Valor Original</th>
+                        <th>Incremento</th>
+                        <th>Total</th>
+                        <th>Verificação</th>
+                        <!-- Tabela 2 -->
+                        <th>Insira o Incremento</th>
+                        <th>Multiplicador do Tick</th>
+                        <!-- Tabela 3 -->
+                        <th>Valor Original</th>
+                        <th>Incremento</th>
+                        <th>Total</th>
+                        <th>Verificação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Start</td>
+                        <td><input type="number" class="form-control" id="start-orig" value=""></td>
+                        <td><input type="number" class="form-control" id="start-incr" value=""></td>
+                        <td class="border" id="total-start"></td>
+                        <td class="border" id="verif-start"></td>
+    
+                        <td><input type="number" class="form-control" id="incr-start" value=""></td>
+                        <td id="mult-start"></td>
+    
+                        <td id="final-start-orig"></td>
+                        <td id="final-start-incr"></td>
+                        <td id="final-start-total"></td>
+                        <td id="final-start-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>Warning</td>
+                        <td><input type="number" class="form-control" id="warning-orig" value=""></td>
+                        <td><input type="number" class="form-control" id="warning-incr" value=""></td>
+                        <td class="border" id="total-warning"></td>
+                        <td class="border" id="verif-warning"></td>
+    
+                        <td><input type="number" class="form-control" id="incr-warning" value=""></td>
+                        <td id="mult-warning"></td>
+    
+                        <td id="final-warning-orig"></td>
+                        <td id="final-warning-incr"></td>
+                        <td id="final-warning-total"></td>
+                        <td id="final-warning-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>End</td>
+                        <td><input type="number" class="form-control" id="end-orig" value=""></td>
+                        <td><input type="number" class="form-control" id="end-incr" value=""></td>
+                        <td class="border" id="total-end"></td>
+                        <td class="border" id="verif-end"></td>
+    
+                        <td><input type="number" class="form-control" id="incr-end" value=""></td>
+                        <td id="mult-end"></td>
+    
+                        <td id="final-end-orig"></td>
+                        <td id="final-end-incr"></td>
+                        <td id="final-end-total"></td>
+                        <td id="final-end-verif"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        <!-- Botão para Salvar o Log -->
+        <button onclick="salvarLog()" class="btn btn-primary mt-4">Salvar Log</button>
+    
     </div>
-
-    <!-- Tabela Pai -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped text-center tabela-pai">
-            <thead class="table-dark">
-                <tr>
-<!--                     <th colspan="5">Tabela 1 - Valores Originais e Incrementos</th>
-                    <th colspan="2">Tabela 2 - Incrementos Extras</th>
-                    <th colspan="4">Tabela 3 - Resultado Final</th> -->
-                </tr>
-                <tr>
-                    <!-- Tabela 1 -->
-                    <th>Campo</th>
-                    <th>Valor Original</th>
-                    <th>Incremento</th>
-                    <th>Total</th>
-                    <th>Verificação</th>
-                    <!-- Tabela 2 -->
-                    <th>Insira o Incremento</th>
-                    <th>Multiplicador do Tick</th>
-                    <!-- Tabela 3 -->
-                    <th>Valor Original</th>
-                    <th>Incremento</th>
-                    <th>Total</th>
-                    <th>Verificação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Start</td>
-                    <td><input type="number" class="form-control" id="start-orig" value=""></td>
-                    <td><input type="number" class="form-control" id="start-incr" value=""></td>
-                    <td class="border" id="total-start"></td>
-                    <td class="border" id="verif-start"></td>
-
-                    <td><input type="number" class="form-control" id="incr-start" value=""></td>
-                    <td id="mult-start"></td>
-
-                    <td id="final-start-orig"></td>
-                    <td id="final-start-incr"></td>
-                    <td id="final-start-total"></td>
-                    <td id="final-start-verif"></td>
-                </tr>
-                <tr>
-                    <td>Warning</td>
-                    <td><input type="number" class="form-control" id="warning-orig" value=""></td>
-                    <td><input type="number" class="form-control" id="warning-incr" value=""></td>
-                    <td class="border" id="total-warning"></td>
-                    <td class="border" id="verif-warning"></td>
-
-                    <td><input type="number" class="form-control" id="incr-warning" value=""></td>
-                    <td id="mult-warning"></td>
-
-                    <td id="final-warning-orig"></td>
-                    <td id="final-warning-incr"></td>
-                    <td id="final-warning-total"></td>
-                    <td id="final-warning-verif"></td>
-                </tr>
-                <tr>
-                    <td>End</td>
-                    <td><input type="number" class="form-control" id="end-orig" value=""></td>
-                    <td><input type="number" class="form-control" id="end-incr" value=""></td>
-                    <td class="border" id="total-end"></td>
-                    <td class="border" id="verif-end"></td>
-
-                    <td><input type="number" class="form-control" id="incr-end" value=""></td>
-                    <td id="mult-end"></td>
-
-                    <td id="final-end-orig"></td>
-                    <td id="final-end-incr"></td>
-                    <td id="final-end-total"></td>
-                    <td id="final-end-verif"></td>
-                </tr>
-            </tbody>
-        </table>
+    
+    
+    <div id="custom-alert" class="custom-alert" style="display: none;">
+        <div class="alert-content">
+            <span id="alert-message"></span>
+            <button id="close-alert" onclick="closeAlert()">OK</button>
+        </div>
     </div>
-</div>
-
-
-<div id="custom-alert" class="custom-alert" style="display: none;">
-    <div class="alert-content">
-        <span id="alert-message"></span>
-        <button id="close-alert" onclick="closeAlert()">OK</button>
-    </div>
-</div>
+    
     <footer role="contentinfo">
         Create WO 1.4.2 &copy; 2025, <a href="https://www.engdb.com.br/" target="_blank">Engineering.</a>
     </footer>
-
-
-      <script>
-            // Insere o header no container
-            fetch("../components/header.html")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("header-container").innerHTML = data;
-            });
-            document.addEventListener("DOMContentLoaded", function () {
-    const inputs = document.querySelectorAll("input[type='number']");
     
-    inputs.forEach(input => {
-        input.addEventListener("input", calcularCotas);
-    });
-
-    function calcularCotas() {
-        const tick = parseInt(document.getElementById('tick').value) || 1;
-        const campos = ['start', 'warning', 'end'];
-
-        campos.forEach(campo => {
-            const orig = parseInt(document.getElementById(`${campo}-orig`).value) || 0;
-            const incr1 = parseInt(document.getElementById(`${campo}-incr`).value) || 0;
-            const incr2 = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
-
-            const totalTabela1 = orig + incr1;
-            document.getElementById(`total-${campo}`).innerText = totalTabela1;
-            validarVerificacao(`verif-${campo}`, totalTabela1, tick);
-
-            validarVerificacao(`mult-${campo}`, incr2, tick);
-
-            const incrementoTabela3 = incr1 + incr2;
-            const totalTabela3 = orig + incrementoTabela3;
-
-            document.getElementById(`final-${campo}-orig`).innerText = orig;
-            document.getElementById(`final-${campo}-incr`).innerText = incrementoTabela3;
-            document.getElementById(`final-${campo}-total`).innerText = totalTabela3;
-
-            validarVerificacao(`final-${campo}-verif`, totalTabela3, tick);
+    
+    <script>
+        // Insere o header no container
+        fetch("../components/header.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-container").innerHTML = data;
         });
-    }
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const numberInputs = document.querySelectorAll("input[type='number']");
+            const textInputs = document.querySelectorAll("input[type='text']");
+    
+            // Lógica para os inputs numéricos
+            numberInputs.forEach(input => {
+                input.addEventListener("input", calcularCotas);
+            });
+    
+            // Lógica para os inputs de texto (caso precise fazer algo com eles)
+            textInputs.forEach(input => {
+                input.addEventListener("input", handleTextInput);
+            });
+    
+            function calcularCotas() {
+                const tick = parseInt(document.getElementById('tick').value) || 1;
+                const campos = ['start', 'warning', 'end'];
+    
+                campos.forEach(campo => {
+                    const orig = parseInt(document.getElementById(`${campo}-orig`).value) || 0;
+                    const incr1 = parseInt(document.getElementById(`${campo}-incr`).value) || 0;
+                    const incr2 = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
+    
+                    const totalTabela1 = orig + incr1;
+                    document.getElementById(`total-${campo}`).innerText = totalTabela1;
+                    validarVerificacao(`verif-${campo}`, totalTabela1, tick);
+    
+                    validarVerificacao(`mult-${campo}`, incr2, tick);
+    
+                    const incrementoTabela3 = incr1 + incr2;
+                    const totalTabela3 = orig + incrementoTabela3;
+    
+                    document.getElementById(`final-${campo}-orig`).innerText = orig;
+                    document.getElementById(`final-${campo}-incr`).innerText = incrementoTabela3;
+                    document.getElementById(`final-${campo}-total`).innerText = totalTabela3;
+    
+                    validarVerificacao(`final-${campo}-verif`, totalTabela3, tick);
+                });
+            }
+    
+            function handleTextInput(event) {
+                const inputId = event.target.id;
+                const inputValue = event.target.value;
+                
+                // Aqui você pode adicionar alguma lógica para lidar com os inputs de texto.
+                console.log(`Input de texto ${inputId} alterado para: ${inputValue}`);
+            }
+    
+            function validarVerificacao(elementoId, valor, tick) {
+                const elemento = document.getElementById(elementoId);
+                if (valor % tick === 0) {
+                    elemento.innerText = 'OK';
+                    elemento.className = 'text-success fw-bold';
+                } else {
+                    elemento.innerText = 'KO';
+                    elemento.className = 'text-danger fw-bold';
+                }
+            }
+    
+            calcularCotas();
+        });
+    
+        // Função para salvar o log
+function salvarLog() {
+    const nome = document.getElementById('nome').value;
+    const estacao = document.getElementById('estacao').value;
+    const tick = document.getElementById('tick').value;
 
-    function validarVerificacao(elementoId, valor, tick) {
-        const elemento = document.getElementById(elementoId);
-        if (valor % tick === 0) {
-            elemento.innerText = 'OK';
-            elemento.className = 'text-success fw-bold';
-        } else {
-            elemento.innerText = 'KO';
-            elemento.className = 'text-danger fw-bold';
+    // Gerar data no formato desejado
+    const data = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+
+    // Criação do objeto logData com os valores das tabelas
+    const logData = {
+        nome: nome,
+        estacao: estacao,
+        tick: tick,
+        tabelas: {
+            start: {
+                orig: document.getElementById('start-orig').value,
+                incr: document.getElementById('start-incr').value,
+                total: document.getElementById('total-start').innerText,
+                verif: document.getElementById('verif-start').innerText,
+                incrExtra: document.getElementById('incr-start').value,
+                multTick: document.getElementById('mult-start').innerText,
+                finalOrig: document.getElementById('final-start-orig').innerText,
+                finalIncr: document.getElementById('final-start-incr').innerText,
+                finalTotal: document.getElementById('final-start-total').innerText,
+                finalVerif: document.getElementById('final-start-verif').innerText,
+            },
+            warning: {
+                orig: document.getElementById('warning-orig').value,
+                incr: document.getElementById('warning-incr').value,
+                total: document.getElementById('total-warning').innerText,
+                verif: document.getElementById('verif-warning').innerText,
+                incrExtra: document.getElementById('incr-warning').value,
+                multTick: document.getElementById('mult-warning').innerText,
+                finalOrig: document.getElementById('final-warning-orig').innerText,
+                finalIncr: document.getElementById('final-warning-incr').innerText,
+                finalTotal: document.getElementById('final-warning-total').innerText,
+                finalVerif: document.getElementById('final-warning-verif').innerText,
+            },
+            end: {
+                orig: document.getElementById('end-orig').value,
+                incr: document.getElementById('end-incr').value,
+                total: document.getElementById('total-end').innerText,
+                verif: document.getElementById('verif-end').innerText,
+                incrExtra: document.getElementById('incr-end').value,
+                multTick: document.getElementById('mult-end').innerText,
+                finalOrig: document.getElementById('final-end-orig').innerText,
+                finalIncr: document.getElementById('final-end-incr').innerText,
+                finalTotal: document.getElementById('final-end-total').innerText,
+                finalVerif: document.getElementById('final-end-verif').innerText,
+            }
         }
-    }
+    };
 
-    calcularCotas();
-});
+    // Nome do arquivo
+    const nomeArquivo = `WORKPLACE+${nome}+${data}.json`;
+
+    // Criação do Blob para download
+    const blob = new Blob([JSON.stringify(logData, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = nomeArquivo;
+    a.click();
+}
 
     </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+    
+    </body>
+    </html>
