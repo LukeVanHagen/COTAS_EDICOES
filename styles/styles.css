@@ -1,0 +1,189 @@
+:root {
+    --first-color: #F7A600;
+    --first-color-light: #FFD78C;
+    --title-color: #804C00;
+    --text-color: #B36B00;
+    --body-color: #FFF3E0;
+    --container-color: #FFFFFF;
+}
+
+/* ======== BODY ======== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--body-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+/* -------- HEADER DAS PÁGINAS ------*/
+
+.header2 {
+    background-color: var(--first-color);
+    padding: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}  
+  .header__container2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px; /* Adiciona um pequeno espaçamento lateral */
+}
+
+.header__img2{
+
+    object-fit: contain; /* Isso fará a imagem se ajustar ao contêiner, mantendo sua proporção */
+    max-height: 40vh; /* 80% da altura da navbar, se a navbar tem 15vh */
+    max-width: 100px; /* Ajuste conforme necessário */
+    height: auto;
+    width: auto;
+  }
+.logo_stellantis2{
+    object-fit: contain;
+    max-height: 40vh; /* ou outro valor que você preferir */
+    max-width: 150px; /* ou outro valor que você preferir */
+    height: auto;
+    width: auto;
+  }
+
+/* ======== HEADER INICIAL ======== */
+.header1 {
+    background-color: var(--first-color);
+    color: var(--container-color);
+    padding: 15px;
+    width: auto; /* Ajusta para a largura necessária */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.header__img1 {
+    object-fit: contain;
+    max-height: 80vh; /* Dobrei o valor de 40vh para 80vh */
+    max-width: 200px; /* Dobrei o valor de 100px para 200px */
+    height: auto;
+    width: auto;
+}
+
+.logo_stellantis {
+    object-fit: contain;
+    max-height: 80vh; /* Dobrei o valor de 40vh para 80vh */
+    max-width: 300px; /* Dobrei o valor de 150px para 300px */
+    height: auto;
+    width: auto;
+}
+
+  .header {
+    background-color: var(--first-color);
+    padding: 200px; /* Aumentei um pouco o padding para ganhar altura */
+    width: calc(100% - 20px); /* Mantém um leve espaçamento lateral */
+    max-width: 1200px; /* Define um limite para evitar que fique muito largo */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 12px; /* Arredondamento sutil para um design moderno */
+    min-height: calc(100px + 10px); /* Aumenta a altura em 10px */
+}
+
+/* Centraliza o header */
+.header__wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 5px; /* Ajuste para criar um efeito sutil de destaque */
+}
+
+/* Container interno para organizar os elementos */
+.header__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 95%; /* Mantém um espaçamento interno confortável */
+    padding: 0 15px;
+}
+
+
+.header__container1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px; /* Adiciona um pequeno espaçamento lateral */
+}
+
+.header__text-container {
+    flex-grow: 1; /* Permite que o título ocupe o espaço central */
+    text-align: center; /* Centraliza o texto */
+    color: var(--container-color);
+    font-size: 24px;
+    font-weight: bold;
+}
+/* Estilizando o título da aplicação */
+.app-title {
+    text-align: center;
+    color: var(--title-color);
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px; /* Espaço entre o título e o pop-up */
+}
+
+
+/* ======== POPUP CONTAINER ======== */
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    background: var(--container-color);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 340px;
+    opacity: 0;
+    transition: all 0.4s ease-in-out;
+}
+
+.popup-container.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ======== POPUP TITLE ======== */
+.popup-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--title-color);
+    margin-bottom: 20px;
+}
+
+/* ======== BOTÕES ======== */
+.option-button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    background: var(--first-color);
+    color: var(--container-color);
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.option-button:hover {
+    background: var(--first-color-light);
+    color: var(--title-color);
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
