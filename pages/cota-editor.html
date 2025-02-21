@@ -17,84 +17,18 @@
     <link rel="stylesheet" href="../assets/css/reset.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="../styles/stylesheet.css">
-    <link rel="stylesheet" href="../styles/create.css">
+    <link rel="stylesheet" href="../styles/cota-editor.css">
+
 </head>
 <body>
-    <style>
-        :root {
-            --first-color: #F7A600;
-            --title-color: #804C00;
-            --text-color: #B36B00;
-            --body-color: #FFF3E0;
-            --container-color: #FFFFFF;
-        }
-        
-        body {
-            font-family: "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: var(--body-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .container {
-            background: var(--container-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 1200px;
-            width: 100%;
-        }
-        
-        /* Estilos da Tabela */
-        .tabela-pai {
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .table th {
-            background-color: var(--first-color);
-            color: white;
-            font-weight: bold;
-        }
-        
-        .table td, .table th {
-            text-align: center;
-            vertical-align: middle;
-            padding: 10px;
-        }
-        
-        .table input {
-            width: 100%;
-            text-align: center;
-            border: 1px solid #ddd;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        
-        .text-success {
-            color: green !important;
-        }
-        
-        .text-danger {
-            color: red !important;
-            font-weight: bold;
-        }
-        
-        @media (max-width: 992px) {
-            .table-responsive {
-                overflow-x: auto;
-            }
-        }
-        </style>
+
 
 <header class='header' id="header-container"></header>
 
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Cálculo de Cotas</h2>
+
     <div class="mb-3">
         <label class="form-label">Tick da Linha:</label>
         <input type="number" class="form-control" id="tick" value="">

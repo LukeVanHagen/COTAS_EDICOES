@@ -1,0 +1,68 @@
+:root {
+    --first-color: #243782;
+    --first-color-light: #5065B5;
+    --title-color: #1A2854;
+    --text-color: #2E3E73;
+    --body-color: #E0E5FF;
+    --container-color: #FFFFFF;
+}
+
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--body-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    background: var(--container-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* Estilos da Tabela */
+.tabela-pai {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--first-color);
+    color: white;
+    font-weight: bold;
+}
+
+.table td, .table th {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+.table input {
+    width: 100%;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.text-success {
+    color: green !important;
+}
+
+.text-danger {
+    color: red !important;
+    font-weight: bold;
+}
+
+@media (max-width: 992px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
