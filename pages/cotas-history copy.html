@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>CALCULADORA DE COTAS</title>
+        <title>PARTNUMBER EDITOR</title>
     
         <!--========== Import Scripts ==========-->
         <script src="../scripts/html2canvas.js"></script>
@@ -11,12 +11,13 @@
     
         <!--========== BOX ICONS ==========-->
         <link href="../../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-        <link rel="shortcut icon" href="../assets/imagens/history.png" type="image/x-icon">
+        <link rel="shortcut icon" href="../../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/window-stack.svg" type="image/x-icon">
     
         <!--========== CSS ==========-->
         <link rel="stylesheet" href="../assets/css/reset.css">
         <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
         <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="../styles/stylesheet.css">
         <link rel="stylesheet" href="../styles/cota-editor.css">
     </head>
     <body>
@@ -47,7 +48,7 @@
                         <tr>
                             <th>Campo</th>
                             <th>Valor Original</th>
-                            <th>Valor Secundário</th>
+                            <th>Incremento</th>
                             <th>Total</th>
                             <th>Verificação</th>
                             <th>Insira o Incremento</th>
@@ -117,14 +118,9 @@
                 </table>
             </div>
         
-            <div class="upload-container">
-                <label for="selecionar-log" class="upload-label">Selecionar Log</label>
-                <input type="file" id="selecionar-log" accept=".json" hidden />
-            </div>
-            
-            
-            
-            
+            <!-- Botão para Carregar Log -->
+            <input type="file" id="selecionar-log" accept=".json" class="btn btn-secondary mt-4" />
+            <button onclick="carregarLog()" class="btn btn-primary mt-4">Carregar Log</button>
         
         </div>
         
@@ -150,72 +146,66 @@
 
 
         
-        document.addEventListener("DOMContentLoaded", function () {
-    const inputArquivo = document.getElementById("selecionar-log");
+            // Função para carregar o log
+function carregarLog() {
+    const arquivoInput = document.getElementById('selecionar-log');
+    const arquivo = arquivoInput.files[0];
 
-    if (!inputArquivo) {
-        console.error("Elemento inputArquivo não encontrado no DOM.");
-        return;
-    }
-
-    function carregarArquivo(event) {
-        const file = event.target.files[0];
-        if (!file) {
-            alert("Nenhum arquivo selecionado.");
-            return;
-        }
-
+    if (arquivo) {
         const reader = new FileReader();
-        reader.onload = function (e) {
+
+        reader.onload = function(event) {
             try {
-                const logData = JSON.parse(e.target.result);
-                console.log("Dados carregados:", logData);
-
-                document.getElementById('nome').value = logData.nome;
-                document.getElementById('estacao').value = logData.estacao;
-                document.getElementById('tick').value = logData.tick;
-
-                const campos = ['start', 'warning', 'exiting', 'end'];
-
-                campos.forEach(campo => {
-                    document.getElementById(`${campo}-orig`).value = logData.tabelas[campo].orig;
-                    document.getElementById(`${campo}-incr`).value = logData.tabelas[campo].incr ?? '';
-                    document.getElementById(`incr-${campo}`).value = logData.tabelas[campo].incrExtra;
-
-                    document.getElementById(`total-${campo}`).innerText = logData.tabelas[campo].total;
-                    document.getElementById(`mult-${campo}`).innerText = logData.tabelas[campo].multTick;
-                    document.getElementById(`final-${campo}-orig`).innerText = logData.tabelas[campo].finalOrig;
-                    document.getElementById(`final-${campo}-incr`).innerText = logData.tabelas[campo].finalIncr;
-                    document.getElementById(`final-${campo}-total`).innerText = logData.tabelas[campo].finalTotal;
-
-                    // IDs das colunas que precisam receber cor
-                    const verifIDs = [
-                        `verif-${campo}`,          // Primeira coluna de verificação
-                        `final-${campo}-verif`,    // Segunda coluna de verificação
-                        `extra-${campo}-verif`,    // Terceira coluna de verificação
-                        `mult-${campo}`            // Multiplicador do Tick (agora com cor)
-                    ];
-
-                    verifIDs.forEach(id => {
-                        const elemento = document.getElementById(id);
-                        if (elemento) {
-                            elemento.innerText = logData.tabelas[campo].verif ? "OK" : "KO";
-                            elemento.style.color = logData.tabelas[campo].verif ? "green" : "red";
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error("Erro ao carregar o arquivo:", error);
-                alert("Erro ao carregar o arquivo. Verifique o formato JSON.");
+                const logData = JSON.parse(event.target.result);
+                exibirLog(logData);
+            } catch (e) {
+                alert('Erro ao carregar o log. Certifique-se de que é um arquivo válido.');
             }
         };
 
-        reader.readAsText(file);
+        reader.readAsText(arquivo);
+    } else {
+        alert('Por favor, selecione um arquivo.');
     }
+}
 
-    inputArquivo.addEventListener("change", carregarArquivo);
-});
+// Função para atualizar os campos da página com os dados do log
+function exibirLog(logData) {
+    document.getElementById('nome').value = logData.nome;
+    document.getElementById('estacao').value = logData.estacao;
+    document.getElementById('tick').value = logData.tick;
 
+    // Lista de campos dinâmicos
+    const campos = ['start', 'warning', 'exiting', 'end'];
+
+    campos.forEach(campo => {
+        document.getElementById(`${campo}-orig`).value = logData.tabelas[campo].orig;
+        document.getElementById(`${campo}-incr`).value = logData.tabelas[campo].incr;
+
+        const total = parseFloat(logData.tabelas[campo].orig) + parseFloat(logData.tabelas[campo].incr);
+        document.getElementById(`total-${campo}`).innerText = total;
+        document.getElementById(`mult-${campo}`).innerText = parseFloat(logData.tabelas[campo].incrExtra);
+
+        document.getElementById(`final-${campo}-orig`).innerText = logData.tabelas[campo].finalOrig;
+        document.getElementById(`final-${campo}-incr`).innerText = logData.tabelas[campo].finalIncr;
+        document.getElementById(`final-${campo}-total`).innerText = logData.tabelas[campo].finalTotal;
+
+        validarVerificacao(`verif-${campo}`, total, logData.tick);
+        validarVerificacao(`final-${campo}-verif`, logData.tabelas[campo].finalTotal, logData.tick);
+    });
+}
+
+// Função para validar OK/KO
+function validarVerificacao(elementoId, valor, tick) {
+    const elemento = document.getElementById(elementoId);
+    if (valor % tick === 0) {
+        elemento.innerText = 'OK';
+        elemento.className = 'text-success fw-bold';
+    } else {
+        elemento.innerText = 'KO';
+        elemento.className = 'text-danger fw-bold';
+    }
+}
 
 
         </script>

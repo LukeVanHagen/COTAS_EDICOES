@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REQUISIÇÕES DE VGO</title>
+    <title>CALCULADORA DE COTAS</title>
 
     <!--========== Import Scripts ==========-->
     <script src="../scripts/html2canvas.js"></script>
@@ -11,14 +11,14 @@
 
     <!--========== BOX ICONS ==========-->
     <link href="../../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="shortcut icon" href="../assets/imagens/create_ICON.webp" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/imagens/calculator.png" type="image/x-icon">
 
     <!--========== CSS ==========-->
     <link rel="stylesheet" href="../assets/css/reset.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
 
-    <link rel="stylesheet" href="../styles/stylesheet.css">
+    
     <link rel="stylesheet" href="../styles/cota-editor.css">
 
 </head>
@@ -57,7 +57,7 @@
                         <!-- Tabela 1 -->
                         <th>Campo</th>
                         <th>Valor Original</th>
-                        <th>Incremento</th>
+                        <th>Valor Secundário</th>
                         <th>Total</th>
                         <th>Verificação</th>
                         <!-- Tabela 2 -->
@@ -102,6 +102,22 @@
                         <td id="final-warning-verif"></td>
                     </tr>
                     <tr>
+                        <td>Exiting</td>
+                        <td><input type="number" class="form-control" id="exiting-orig" value=""></td>
+                        <td><input type="number" class="form-control" id="exiting-incr" value=""></td>
+                        <td class="border" id="total-exiting"></td>
+                        <td class="border" id="verif-exiting"></td>
+                    
+                        <td><input type="number" class="form-control" id="incr-exiting" value=""></td>
+                        <td id="mult-exiting"></td>
+                    
+                        <td id="final-exiting-orig"></td>
+                        <td id="final-exiting-incr"></td>
+                        <td id="final-exiting-total"></td>
+                        <td id="final-exiting-verif"></td>
+                    </tr>
+                    
+                    <tr>
                         <td>End</td>
                         <td><input type="number" class="form-control" id="end-orig" value=""></td>
                         <td><input type="number" class="form-control" id="end-incr" value=""></td>
@@ -121,7 +137,7 @@
         </div>
     
         <!-- Botão para Salvar o Log -->
-        <button onclick="salvarLog()" class="btn btn-primary mt-4">Salvar Log</button>
+        <button onclick="salvarLog()" class="btn btn-primary mt-4 ">Salvar Log</button>
     
     </div>
     
@@ -147,131 +163,86 @@
         });
     
         document.addEventListener("DOMContentLoaded", function () {
-            const numberInputs = document.querySelectorAll("input[type='number']");
-            const textInputs = document.querySelectorAll("input[type='text']");
-    
-            // Lógica para os inputs numéricos
-            numberInputs.forEach(input => {
-                input.addEventListener("input", calcularCotas);
-            });
-    
-            // Lógica para os inputs de texto (caso precise fazer algo com eles)
-            textInputs.forEach(input => {
-                input.addEventListener("input", handleTextInput);
-            });
-    
-            function calcularCotas() {
-                const tick = parseInt(document.getElementById('tick').value) || 1;
-                const campos = ['start', 'warning', 'end'];
-    
-                campos.forEach(campo => {
-                    const orig = parseInt(document.getElementById(`${campo}-orig`).value) || 0;
-                    const incr1 = parseInt(document.getElementById(`${campo}-incr`).value) || 0;
-                    const incr2 = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
-    
-                    const totalTabela1 = orig + incr1;
-                    document.getElementById(`total-${campo}`).innerText = totalTabela1;
-                    validarVerificacao(`verif-${campo}`, totalTabela1, tick);
-    
-                    validarVerificacao(`mult-${campo}`, incr2, tick);
-    
-                    const incrementoTabela3 = incr1 + incr2;
-                    const totalTabela3 = orig + incrementoTabela3;
-    
-                    document.getElementById(`final-${campo}-orig`).innerText = orig;
-                    document.getElementById(`final-${campo}-incr`).innerText = incrementoTabela3;
-                    document.getElementById(`final-${campo}-total`).innerText = totalTabela3;
-    
-                    validarVerificacao(`final-${campo}-verif`, totalTabela3, tick);
-                });
-            }
-    
-            function handleTextInput(event) {
-                const inputId = event.target.id;
-                const inputValue = event.target.value;
-                
-                // Aqui você pode adicionar alguma lógica para lidar com os inputs de texto.
-                console.log(`Input de texto ${inputId} alterado para: ${inputValue}`);
-            }
-    
-            function validarVerificacao(elementoId, valor, tick) {
-                const elemento = document.getElementById(elementoId);
-                if (valor % tick === 0) {
-                    elemento.innerText = 'OK';
-                    elemento.className = 'text-success fw-bold';
-                } else {
-                    elemento.innerText = 'KO';
-                    elemento.className = 'text-danger fw-bold';
-                }
-            }
-    
-            calcularCotas();
+        const numberInputs = document.querySelectorAll("input[type='number']");
+        numberInputs.forEach(input => {
+            input.addEventListener("input", calcularCotas);
         });
-    
-        // Função para salvar o log
-function salvarLog() {
-    const nome = document.getElementById('nome').value;
-    const estacao = document.getElementById('estacao').value;
-    const tick = document.getElementById('tick').value;
 
-    // Gerar data no formato desejado
-    const data = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+        function calcularCotas() {
+            const tick = parseInt(document.getElementById('tick').value) || 1;
+            const campos = ['start', 'warning', 'exiting', 'end'];
 
-    // Criação do objeto logData com os valores das tabelas
-    const logData = {
-        nome: nome,
-        estacao: estacao,
-        tick: tick,
-        tabelas: {
-            start: {
-                orig: document.getElementById('start-orig').value,
-                incr: document.getElementById('start-incr').value,
-                total: document.getElementById('total-start').innerText,
-                verif: document.getElementById('verif-start').innerText,
-                incrExtra: document.getElementById('incr-start').value,
-                multTick: document.getElementById('mult-start').innerText,
-                finalOrig: document.getElementById('final-start-orig').innerText,
-                finalIncr: document.getElementById('final-start-incr').innerText,
-                finalTotal: document.getElementById('final-start-total').innerText,
-                finalVerif: document.getElementById('final-start-verif').innerText,
-            },
-            warning: {
-                orig: document.getElementById('warning-orig').value,
-                incr: document.getElementById('warning-incr').value,
-                total: document.getElementById('total-warning').innerText,
-                verif: document.getElementById('verif-warning').innerText,
-                incrExtra: document.getElementById('incr-warning').value,
-                multTick: document.getElementById('mult-warning').innerText,
-                finalOrig: document.getElementById('final-warning-orig').innerText,
-                finalIncr: document.getElementById('final-warning-incr').innerText,
-                finalTotal: document.getElementById('final-warning-total').innerText,
-                finalVerif: document.getElementById('final-warning-verif').innerText,
-            },
-            end: {
-                orig: document.getElementById('end-orig').value,
-                incr: document.getElementById('end-incr').value,
-                total: document.getElementById('total-end').innerText,
-                verif: document.getElementById('verif-end').innerText,
-                incrExtra: document.getElementById('incr-end').value,
-                multTick: document.getElementById('mult-end').innerText,
-                finalOrig: document.getElementById('final-end-orig').innerText,
-                finalIncr: document.getElementById('final-end-incr').innerText,
-                finalTotal: document.getElementById('final-end-total').innerText,
-                finalVerif: document.getElementById('final-end-verif').innerText,
+            campos.forEach(campo => {
+                const orig = parseInt(document.getElementById(`${campo}-orig`).value) || 0;
+                const incr1 = parseInt(document.getElementById(`${campo}-incr`).value) || 0;
+                const incr2 = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
+
+                const totalTabela1 = orig + incr1;
+                document.getElementById(`total-${campo}`).innerText = totalTabela1;
+                validarVerificacao(`verif-${campo}`, totalTabela1, tick);
+
+                validarVerificacao(`mult-${campo}`, incr2, tick);
+
+                const incrementoTabela3 = incr1 + incr2;
+                const totalTabela3 = orig + incrementoTabela3;
+
+                document.getElementById(`final-${campo}-orig`).innerText = orig;
+                document.getElementById(`final-${campo}-incr`).innerText = incrementoTabela3;
+                document.getElementById(`final-${campo}-total`).innerText = totalTabela3;
+
+                validarVerificacao(`final-${campo}-verif`, totalTabela3, tick);
+            });
+        }
+
+        function validarVerificacao(elementoId, valor, tick) {
+            const elemento = document.getElementById(elementoId);
+            if (valor % tick === 0) {
+                elemento.innerText = 'OK';
+                elemento.className = 'text-success fw-bold';
+            } else {
+                elemento.innerText = 'KO';
+                elemento.className = 'text-danger fw-bold';
             }
         }
-    };
+        
+        calcularCotas();
+    });
 
-    // Nome do arquivo
-    const nomeArquivo = `WORKPLACE+${nome}+${data}.json`;
+    function salvarLog() {
+        const nome = document.getElementById('nome').value;
+        const estacao = document.getElementById('estacao').value;
+        const tick = document.getElementById('tick').value;
+        const data = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
 
-    // Criação do Blob para download
-    const blob = new Blob([JSON.stringify(logData, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = nomeArquivo;
-    a.click();
-}
+        const logData = {
+            nome: nome,
+            estacao: estacao,
+            tick: tick,
+            tabelas: {}
+        };
+
+        ['start', 'warning', 'exiting', 'end'].forEach(campo => {
+            logData.tabelas[campo] = {
+                orig: document.getElementById(`${campo}-orig`).value,
+                incr: document.getElementById(`${campo}-incr`).value,
+                total: document.getElementById(`total-${campo}`).innerText,
+                verif: document.getElementById(`verif-${campo}`).innerText,
+                incrExtra: document.getElementById(`incr-${campo}`).value,
+                multTick: document.getElementById(`mult-${campo}`).innerText,
+                finalOrig: document.getElementById(`final-${campo}-orig`).innerText,
+                finalIncr: document.getElementById(`final-${campo}-incr`).innerText,
+                finalTotal: document.getElementById(`final-${campo}-total`).innerText,
+                finalVerif: document.getElementById(`final-${campo}-verif`).innerText,
+            };
+        });
+
+        const nomeArquivo = `${estacao}+${nome}+${data}.json`;
+        const blob = new Blob([JSON.stringify(logData, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = nomeArquivo;
+        a.click();
+    }
 
     </script>
     
