@@ -1,19 +1,24 @@
 document.addEventListener("DOMContentLoaded", function () {
     const popup = document.getElementById("popup-container");
 
-    // Exibir pop-up com efeito
+   
     setTimeout(() => {
         popup.classList.add("show");
     }, 200);
 
-    // Eventos dos botões
+    
     document.getElementById("cotas-ict").addEventListener("click", function () {
-        window.open("./pages/cota-editor.html", "_blank");
+        window.location.href = "./pages/cota-editor.html"; // Abre na mesma guia
     });
 
     document.getElementById("cotas-history").addEventListener("click", function () {
-        window.open("./pages/cotas-history.html", "_blank");
+        window.location.href = "./pages/cotas-history.html"; // Abre na mesma guia
+    });
+
+    document.getElementById("cotas-help").addEventListener("click", function () {
+        window.location.href = "./pages/cotas-help.html"; // Abre na mesma guia
     });
 
 
 });
+

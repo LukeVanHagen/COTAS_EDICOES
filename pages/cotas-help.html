@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajuda - Calculadora de Cotas</title>
+
+    <!--========== CSS ==========-->
+    <link rel="stylesheet" href="../assets/css/reset.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../styles/stylesheet.css">
+    <link rel="stylesheet" href="../styles/cota-editor.css">
+    <style>
+
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+        }
+         h2, h3 {
+
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: justify;
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 30px;
+            line-height: 1.6;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<header class='header' id="header-container"></header>
+
+<div class="container">
+    <h2 class='text-success1'>Ajuda - Como Utilizar a Calculadora de Cotas</h2>
+    <p>Esta página explica detalhadamente como utilizar a Calculadora de Cotas, descrevendo cada campo e funcionalidade.</p>
+
+    <h2>1. Campos de Entrada</h2>
+    <ul>
+        <li><strong>Nome:</strong> Insira o nome do operador ou responsável pela análise.</li>
+        <li><strong>Estação:</strong> Indique a estação de trabalho ou local onde os cálculos estão sendo feitos.</li>
+        <li><strong>Tick da Linha:</strong> Define o fator de multiplicação para os cálculos das cotas.</li>
+    </ul>
+    <BR>
+    <h2>2. Estrutura da Tabela</h2>
+    <p>A tabela principal é dividida em três partes:</p>
+    <ul>
+        <li><strong>Tabela 1:</strong> Contém os valores originais e incrementos.</li>
+        <li><strong>Tabela 2:</strong> Permite adicionar incrementos extras.</li>
+        <li><strong>Tabela 3:</strong> Exibe o resultado final após os cálculos.</li>
+    </ul>
+    <BR>
+    <h3>Explicação das Colunas</h3>
+    <ul>
+        <li><strong>Campo:</strong> Nome do parâmetro avaliado (Start, Warning, Exiting, End).</li>
+        <li><strong>Valor Original:</strong> Número base antes de qualquer alteração.</li>
+        <li><strong>Valor Secundário:</strong> Adiciona um valor extra ao original.</li>
+        <li><strong>Total:</strong> Soma dos valores da primeira tabela.</li>
+        <li><strong>Verificação:</strong> Indica se o valor total é um múltiplo do Tick da Linha (OK ou KO).</li>
+        <li><strong>Insira o Incremento:</strong> Permite adicionar um valor extra.</li>
+        <li><strong>Multiplicador do Tick:</strong> Mostra se o incremento respeita o tick da linha.</li>
+        <li><strong>Valor Original (Tabela 3):</strong> Mostra novamente o valor original.</li>
+        <li><strong>Incremento:</strong> Soma dos incrementos adicionados.</li>
+        <li><strong>Total (Final):</strong> Resultado final do cálculo.</li>
+        <li><strong>Verificação Final:</strong> Indica se o valor final é válido.</li>
+    </ul>
+    <BR>
+    <h2>3. Funcionalidade de Validação</h2>
+    <p>Os valores são validados automaticamente, exibindo "OK" se forem múltiplos do Tick ou "KO" caso contrário.</p>
+    <BR>
+    <h2>4. Salvamento de Log</h2>
+    <p>Ao clicar no botão "Salvar Log", os dados da análise são baixados em um arquivo JSON nomeado com base na estação, nome do operador e data.</p>
+
+    <BR>
+
+<h2 class='text-success1'>Ajuda - Como Utilizar a Página de Histórico</h2>
+<p>A página de histórico permite carregar logs salvos anteriormente para revisão e análise.</p>
+
+<h2>1. Como Carregar um Arquivo de Log</h2>
+<ul>
+    <li>Clique no botão "Selecionar Log".</li>
+    <li>Escolha um arquivo JSON previamente salvo.</li>
+    <li>Os dados do log serão carregados automaticamente nos campos da tabela.</li>
+</ul>
+<br>
+<h2>2. Interpretação dos Dados Carregados</h2>
+<p>Ao carregar um log, os seguintes campos são preenchidos:</p>
+<ul>
+    <li><strong>Nome e Estação:</strong> Exibem os dados do operador e do local onde a análise foi realizada.</li>
+    <li><strong>Tick da Linha:</strong> Exibe o fator de multiplicação original usado nos cálculos.</li>
+    <li><strong>Tabela de Valores:</strong> Exibe os valores originais, incrementos e verificações dos cálculos.</li>
+</ul>
+<br>
+<h2>3. Validação Automática</h2>
+<p>Os valores carregados passam por uma nova verificação para garantir que continuam respeitando as regras de múltiplos do Tick.</p>
+<br>
+<h2 class='text-success1'>OBS: CLICANDO NO TITULO DA PÁGINA "CALCULADORA DE COTAS" VOCÊ É DIRECIONADO PARA O MENU </h2>
+</div>
+
+<footer role="contentinfo" class="mb-4">
+    Create WO 1.4.2 &copy; 2025, <a href="https://www.engdb.com.br/" target="_blank">Engineering.</a>
+</footer>
+
+<script>
+// Insere o header no container
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("../components/header.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-container").innerHTML = data;
+        });
+});
+</script>
+
+</body>
+</html>

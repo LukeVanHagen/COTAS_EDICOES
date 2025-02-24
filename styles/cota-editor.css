@@ -78,6 +78,27 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
+/* Para navegadores baseados em WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+#titulo-voltar {
+    text-decoration: none; /* Remove o sublinhado */
+}
+
 
 /* Estilos da Tabela */
 .tabela-pai {
@@ -120,6 +141,10 @@ body {
 /* Textos de status */
 .text-success {
     color: green !important;
+}
+.text-success1 {
+    color: var(--first-color);
+    font-weight: bold
 }
 
 .text-danger {

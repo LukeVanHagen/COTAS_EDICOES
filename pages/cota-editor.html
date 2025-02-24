@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
 
-    
+
     <link rel="stylesheet" href="../styles/cota-editor.css">
 
 </head>
@@ -28,20 +28,25 @@
     <header class='header' id="header-container"></header>
     
     <div class="container mt-4">
-    
-        <div class="mb-3">
+
+
+
+        
+
+        
+        <div class="mb-3" >
             <label class="form-label">Nome:</label>
-            <input type="text" class="form-control" id="nome" value="">
+            <input type="text" class="form-control" id="nome" placeholder="Ex: Giandzep">
         </div>
         
         <div class="mb-3">
             <label class="form-label">Estação:</label>
-            <input type="text" class="form-control" id="estacao" value="">
+            <input type="text" class="form-control" id="estacao" placeholder="Ex: WPA_S001_Tl100_3">
         </div>
         
         <div class="mb-3">
             <label class="form-label">Tick da Linha:</label>
-            <input type="number" class="form-control" id="tick" value="">
+            <input type="number" class="form-control" id="tick" placeholder="Ex: 150">
         </div>
     
         <!-- Tabela Pai -->
@@ -82,7 +87,7 @@
                         <td id="mult-start"></td>
     
                         <td id="final-start-orig"></td>
-                        <td id="final-start-incr"></td>
+                        <td id="final-start-incr" class='text-success1'></td>
                         <td id="final-start-total"></td>
                         <td id="final-start-verif"></td>
                     </tr>
@@ -97,7 +102,7 @@
                         <td id="mult-warning"></td>
     
                         <td id="final-warning-orig"></td>
-                        <td id="final-warning-incr"></td>
+                        <td id="final-warning-incr" class='text-success1'></td>
                         <td id="final-warning-total"></td>
                         <td id="final-warning-verif"></td>
                     </tr>
@@ -112,7 +117,7 @@
                         <td id="mult-exiting"></td>
                     
                         <td id="final-exiting-orig"></td>
-                        <td id="final-exiting-incr"></td>
+                        <td id="final-exiting-incr" class='text-success1'></td>
                         <td id="final-exiting-total"></td>
                         <td id="final-exiting-verif"></td>
                     </tr>
@@ -128,7 +133,7 @@
                         <td id="mult-end"></td>
     
                         <td id="final-end-orig"></td>
-                        <td id="final-end-incr"></td>
+                        <td id="final-end-incr" class='text-success1'></td>
                         <td id="final-end-total"></td>
                         <td id="final-end-verif"></td>
                     </tr>
@@ -136,9 +141,10 @@
             </table>
         </div>
     
-        <!-- Botão para Salvar o Log -->
-        <button onclick="salvarLog()" class="btn btn-primary mt-4 ">Salvar Log</button>
-    
+
+            <button onclick="salvarLog()" class="btn btn-primary">Salvar Log</button>
+
+        
     </div>
     
     
@@ -153,7 +159,7 @@
         Create WO 1.4.2 &copy; 2025, <a href="https://www.engdb.com.br/" target="_blank">Engineering.</a>
     </footer>
     
-    
+
     <script>
         // Insere o header no container
         fetch("../components/header.html")
@@ -161,6 +167,7 @@
         .then(data => {
             document.getElementById("header-container").innerHTML = data;
         });
+
     
         document.addEventListener("DOMContentLoaded", function () {
         const numberInputs = document.querySelectorAll("input[type='number']");
@@ -245,8 +252,7 @@
     }
 
     </script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+
     </body>
     </html>
