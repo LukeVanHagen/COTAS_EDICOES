@@ -340,7 +340,14 @@ button:active {
     margin-top: 20px;
 }
 
-/* Estiliza o label como botão */
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza tudo */
+    gap: 8px; /* Espaçamento entre os elementos */
+}
+
+/* Estiliza o botão de seleção */
 .upload-label {
     width: 250px;
     height: 45px;
@@ -364,6 +371,18 @@ button:active {
     transform: scale(1.05);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
+
+/* Estiliza o nome do arquivo */
+.file-name {
+    font-size: 14px;
+    color: var(--text-color);
+    font-weight: bold;
+    text-align: center;
+    display: none; /* Oculto por padrão */
+}
+
+
+
 .table tr:hover td {
     background: rgba(36, 55, 130, 0.1);
 }

@@ -118,14 +118,12 @@
                 </div>
             
                 <div class="upload-container">
+                    <span id="file-name" class="file-name" style="display: none;"></span>
                     <label for="selecionar-log" class="upload-label">Selecionar Log</label>
                     <input type="file" id="selecionar-log" accept=".json" hidden />
                 </div>
                 
                 
-                
-                
-            
             </div>
             
             <div id="custom-alert" class="custom-alert" style="display: none;">
@@ -147,6 +145,17 @@
             .then(data => {
                 document.getElementById("header-container").innerHTML = data;
             });
+
+            document.getElementById("selecionar-log").addEventListener("change", function() {
+            const fileNameSpan = document.getElementById("file-name");
+            if (this.files.length > 0) {
+                fileNameSpan.textContent = this.files[0].name; // Define o nome do arquivo
+                fileNameSpan.style.display = "block"; // Exibe o nome do arquivo
+            } else {
+                fileNameSpan.style.display = "none"; // Oculta se não houver arquivo selecionado
+            }
+            });
+
 
 
             
