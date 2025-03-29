@@ -15,10 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "./pages/cotas-history.html"; // Abre na mesma guia
     });
 
-    document.getElementById("cotas-help").addEventListener("click", function () {
-        window.location.href = "./pages/cotas-help.html"; // Abre na mesma guia
+    document.getElementById("cotas-simulator").addEventListener("click", function () {
+        window.location.href = "./pages/cota-simulator.html"; // Abre na mesma guia
     });
-
 
 });
 

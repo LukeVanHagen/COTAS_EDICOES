@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALCULADORA DE COTAS AUTOMÁTICA</title>
+
+    <!--========== Import Scripts ==========-->
+    <script src="../scripts/html2canvas.js"></script>
+    <script src="../scripts/pdf.js"></script>
+
+    <!--========== BOX ICONS ==========-->
+    <link href="../../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/imagens/calculator.png" type="image/x-icon">
+
+    <!--========== CSS ==========-->
+    <link rel="stylesheet" href="../assets/css/reset.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../styles/cota-editor.css">
+
+    <style>
+        .text-success1 {
+            color: #17d14f;
+            font-weight: bold;
+        }
+        .text-success {
+            color: var(--first-color)!important;
+            font-weight: bold
+        }
+        .text-danger {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .border {
+            border: 1px solid #dee2e6;
+        }
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        .alert-content {
+            text-align: center;
+        }
+        #close-alert {
+            margin-top: 10px;
+            padding: 5px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .valor-secundario {
+            background-color: #f8f9fa;
+            pointer-events: none;
+        }
+        .disabled-input {
+            background-color: #e9ecef;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <header class='header' id="header-container"></header>
+    
+    <div class="container mt-4">
+        <div class="mb-3">
+            <label class="form-label">Nome:</label>
+            <input type="text" class="form-control" id="nome" placeholder="Ex: João">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Tick da Linha:</label>
+            <input type="number" class="form-control" id="tick" placeholder="Ex: 200" min="1">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Tamanho Total da Cota (cm):</label>
+            <input type="number" class="form-control" id="tamanho-total" placeholder="Ex: 4000" min="1">
+        </div>
+    
+        <!-- Tabela Pai -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center tabela-pai">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valor Primário</th>
+                        <th>Valor Secundário</th>
+                        <th>Valor Total</th>
+                        <th>Verificação</th>
+                        <!-- Tabela 2 -->
+                        <th>Insira o Incremento</th>
+                        <th>Verificação do Incremento</th>
+                        <!-- Tabela 3 -->
+                        <th>Valor Original</th>
+                        <th>Incremento</th>
+                        <th>Total</th>
+                        <th>Verificação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Start</td>
+                        <td><input type="number" class="form-control disabled-input" id="start-primario" value="" disabled></td>
+                        <td><input type="text" class="form-control valor-secundario" id="start-secundario" value="" readonly></td>
+                        <td><input type="number" class="form-control" id="start-total" value="" required></td>
+                        <td class="border" id="verif-start"></td>
+    
+                        <td><input type="number" class="form-control" id="incr-start" value="0"></td>
+                        <td class="border" id="mult-start"></td>
+    
+                        <td id="final-start-orig"></td>
+                        <td id="final-start-incr" class='text-success'></td>
+                        <td id="final-start-total"></td>
+                        <td id="final-start-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>Warning</td>
+                        <td><input type="number" class="form-control disabled-input" id="warning-primario" value="" disabled></td>
+                        <td><input type="text" class="form-control valor-secundario" id="warning-secundario" value="" readonly></td>
+                        <td id="warning-total"></td>
+                        <td class="border" id="verif-warning"></td>
+    
+                        <td><input type="number" class="form-control" id="incr-warning" value="0"></td>
+                        <td class="border" id="mult-warning"></td>
+    
+                        <td id="final-warning-orig"></td>
+                        <td id="final-warning-incr" class='text-success'></td>
+                        <td id="final-warning-total"></td>
+                        <td id="final-warning-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>Exiting</td>
+                        <td><input type="number" class="form-control disabled-input" id="exiting-primario" value="" disabled></td>
+                        <td><input type="text" class="form-control valor-secundario" id="exiting-secundario" value="" readonly></td>
+                        <td id="exiting-total"></td>
+                        <td class="border" id="verif-exiting"></td>
+                    
+                        <td><input type="number" class="form-control" id="incr-exiting" value="0"></td>
+                        <td class="border" id="mult-exiting"></td>
+                    
+                        <td id="final-exiting-orig"></td>
+                        <td id="final-exiting-incr" class='text-success'></td>
+                        <td id="final-exiting-total"></td>
+                        <td id="final-exiting-verif"></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Exit</td>
+                        <td><input type="number" class="form-control disabled-input" id="exit-primario" value="" disabled></td>
+                        <td><input type="text" class="form-control valor-secundario" id="exit-secundario" value="" readonly></td>
+                        <td id="exit-total"></td>
+                        <td class="border" id="verif-exit"></td>
+    
+                        <td><input type="number" class="form-control" id="incr-exit" value="0"></td>
+                        <td class="border" id="mult-exit"></td>
+    
+                        <td id="final-exit-orig"></td>
+                        <td id="final-exit-incr" class='text-success'></td>
+                        <td id="final-exit-total"></td>
+                        <td id="final-exit-verif"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div id="custom-alert" class="custom-alert" style="display: none;">
+        <div class="alert-content">
+            <span id="alert-message"></span>
+            <button id="close-alert" onclick="closeAlert()">OK</button>
+        </div>
+    </div>
+    
+    <footer role="contentinfo">
+        Create WO 1.4.2 &copy; 2025, <a href="https://www.engdb.com.br/" target="_blank">Engineering.</a>
+    </footer>
+    
+
+    <script>
+        // Insere o header no container
+        fetch("../components/header.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("header-container").innerHTML = data;
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Adiciona eventos a todos os inputs
+            const inputs = document.querySelectorAll("input[type='number'], input[type='text']");
+            inputs.forEach(input => {
+                input.addEventListener("input", calcularCotas);
+            });
+
+            // Evento específico para o start-total
+            document.getElementById('start-total').addEventListener('input', function() {
+                const startTotal = parseInt(this.value) || 0;
+                const primarioInput = document.getElementById('start-primario');
+                
+                // Habilita/desabilita o primário conforme o total está preenchido
+                primarioInput.disabled = startTotal <= 0;
+                if (startTotal > 0) {
+                    primarioInput.classList.remove('disabled-input');
+                } else {
+                    primarioInput.classList.add('disabled-input');
+                }
+                
+                calcularCotas();
+            });
+
+            // Focar no campo de nome ao carregar a página
+            document.getElementById('nome').focus();
+        });
+
+        function calcularCotas() {
+            const tick = parseInt(document.getElementById('tick').value) || 1;
+            const tamanhoTotal = parseInt(document.getElementById('tamanho-total').value) || 0;
+            const startTotal = parseInt(document.getElementById('start-total').value) || 0;
+            
+            if (tick <= 0 || tamanhoTotal <= 0) return;
+            
+            // Calcula os valores totais automáticos
+            const exitTotal = startTotal + tamanhoTotal;
+            const exitingTotal = exitTotal - (2 * tick);
+            const warningTotal = Math.round(startTotal + (tamanhoTotal * 0.7));
+            
+            // Preenche os valores totais
+            if (!isNaN(warningTotal)) {
+                document.getElementById('warning-total').innerText = warningTotal;
+                togglePrimarioInput('warning', warningTotal);
+            }
+            if (!isNaN(exitingTotal)) {
+                document.getElementById('exiting-total').innerText = exitingTotal;
+                togglePrimarioInput('exiting', exitingTotal);
+            }
+            if (!isNaN(exitTotal)) {
+                document.getElementById('exit-total').innerText = exitTotal;
+                togglePrimarioInput('exit', exitTotal);
+            }
+            
+            // Calcula os valores secundários
+            calcularValoresSecundarios('start', startTotal);
+            calcularValoresSecundarios('warning', warningTotal);
+            calcularValoresSecundarios('exiting', exitingTotal);
+            calcularValoresSecundarios('exit', exitTotal);
+            
+            // Verificações e cálculos das outras tabelas
+            const campos = ['start', 'warning', 'exiting', 'exit'];
+            campos.forEach(campo => {
+                const total = campo === 'start' ? startTotal : parseInt(document.getElementById(`${campo}-total`).innerText) || 0;
+                
+                validarVerificacao(`verif-${campo}`, total, tick);
+                
+                const incr = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
+                validarVerificacao(`mult-${campo}`, incr, tick);
+                
+                const valorOriginal = total;
+                const secundario = parseFloat(document.getElementById(`${campo}-secundario`).value) || 0;
+                const incrementoTabela2 = incr;
+                const incrementoTotal = secundario + incrementoTabela2;
+                const totalFinal = valorOriginal + incrementoTotal;
+                
+                document.getElementById(`final-${campo}-orig`).innerText = valorOriginal;
+                document.getElementById(`final-${campo}-incr`).innerText = incrementoTotal;
+                document.getElementById(`final-${campo}-total`).innerText = totalFinal;
+                
+                validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
+            });
+        }
+
+        function togglePrimarioInput(campo, total) {
+            const primarioInput = document.getElementById(`${campo}-primario`);
+            primarioInput.disabled = total <= 0;
+            if (total > 0) {
+                primarioInput.classList.remove('disabled-input');
+            } else {
+                primarioInput.classList.add('disabled-input');
+            }
+        }
+
+        function calcularValoresSecundarios(campo, total) {
+            const primario = parseInt(document.getElementById(`${campo}-primario`).value) || 0;
+            const secundarioInput = document.getElementById(`${campo}-secundario`);
+            
+            if (total > 0 && primario !== 0) {
+                const secundario = total - primario;
+                
+                // Formata o valor com sinal e cores
+                if (secundario > 0) {
+                    secundarioInput.value = `+${secundario}`;
+                    secundarioInput.className = 'form-control valor-secundario text-success1';
+                } else if (secundario < 0) {
+                    secundarioInput.value = secundario;
+                    secundarioInput.className = 'form-control valor-secundario text-danger';
+                } else {
+                    secundarioInput.value = '0';
+                    secundarioInput.className = 'form-control valor-secundario';
+                }
+            } else {
+                secundarioInput.value = '';
+                secundarioInput.className = 'form-control valor-secundario';
+            }
+        }
+
+        function validarVerificacao(elementoId, valor, tick) {
+            const elemento = document.getElementById(elementoId);
+            if (!elemento) return;
+            
+            if (valor === 0 && (elementoId.includes('mult-') || elementoId.includes('verif-'))) {
+                elemento.innerText = '';
+                elemento.className = 'border';
+                return;
+            }
+            
+            if (tick > 0 && valor % tick === 0) {
+                elemento.innerText = 'OK';
+                elemento.className = 'text-success1 border';
+            } else {
+                elemento.innerText = 'KO';
+                elemento.className = 'text-danger border';
+            }
+        }
+        
+        function showAlert(message) {
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('custom-alert').style.display = 'block';
+        }
+        
+        function closeAlert() {
+            document.getElementById('custom-alert').style.display = 'none';
+        }
+        
+        function salvarLog() {
+            const nome = document.getElementById('nome').value;
+            const tick = document.getElementById('tick').value;
+            const tamanhoTotal = document.getElementById('tamanho-total').value;
+            
+            if (!nome || !tick || !tamanhoTotal || !document.getElementById('start-total').value) {
+                showAlert('Preencha todos os campos obrigatórios!');
+                return;
+            }
+            
+            const data = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+
+            const logData = {
+                nome: nome,
+                tick: tick,
+                tamanhoTotal: tamanhoTotal,
+                tabelas: {}
+            };
+
+            ['start', 'warning', 'exiting', 'exit'].forEach(campo => {
+                logData.tabelas[campo] = {
+                    primario: document.getElementById(`${campo}-primario`).value,
+                    secundario: document.getElementById(`${campo}-secundario`).value,
+                    total: campo === 'start' ? document.getElementById(`${campo}-total`).value : document.getElementById(`${campo}-total`).innerText,
+                    verif: document.getElementById(`verif-${campo}`).innerText,
+                    incrExtra: document.getElementById(`incr-${campo}`).value,
+                    multTick: document.getElementById(`mult-${campo}`).innerText,
+                    finalOrig: document.getElementById(`final-${campo}-orig`).innerText,
+                    finalIncr: document.getElementById(`final-${campo}-incr`).innerText,
+                    finalTotal: document.getElementById(`final-${campo}-total`).innerText,
+                    finalVerif: document.getElementById(`final-${campo}-verif`).innerText,
+                };
+            });
+
+            const nomeArquivo = `Cotas_${nome}_${data}.json`;
+            const blob = new Blob([JSON.stringify(logData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = nomeArquivo;
+            a.click();
+        }
+    </script>
+</body>
+</html>
