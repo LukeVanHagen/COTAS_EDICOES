@@ -77,6 +77,11 @@
             <label class="form-label">Nome:</label>
             <input type="text" class="form-control" id="nome" placeholder="Ex: João">
         </div>
+
+        <div class="mb-3">
+            <label class="form-label">Estação:</label>
+            <input type="text" class="form-control" id="estacao" placeholder="Ex: WPA_S001_Tl100_3">
+        </div>
         
         <div class="mb-3">
             <label class="form-label">Tick da Linha:</label>
@@ -172,6 +177,7 @@
                     </tr>
                 </tbody>
             </table>
+            <button onclick="salvarLog()" class="btn btn-primary">Salvar Log</button>
         </div>
     </div>
     
@@ -223,60 +229,63 @@
         });
 
         function calcularCotas() {
-            const tick = parseInt(document.getElementById('tick').value) || 1;
-            const tamanhoTotal = parseInt(document.getElementById('tamanho-total').value) || 0;
-            const startTotal = parseInt(document.getElementById('start-total').value) || 0;
-            
-            if (tick <= 0 || tamanhoTotal <= 0) return;
-            
-            // Calcula os valores totais automáticos
-            const exitTotal = startTotal + tamanhoTotal;
-            const exitingTotal = exitTotal - (2 * tick);
-            const warningTotal = Math.round(startTotal + (tamanhoTotal * 0.7));
-            
-            // Preenche os valores totais
-            if (!isNaN(warningTotal)) {
-                document.getElementById('warning-total').innerText = warningTotal;
-                togglePrimarioInput('warning', warningTotal);
-            }
-            if (!isNaN(exitingTotal)) {
-                document.getElementById('exiting-total').innerText = exitingTotal;
-                togglePrimarioInput('exiting', exitingTotal);
-            }
-            if (!isNaN(exitTotal)) {
-                document.getElementById('exit-total').innerText = exitTotal;
-                togglePrimarioInput('exit', exitTotal);
-            }
-            
-            // Calcula os valores secundários
-            calcularValoresSecundarios('start', startTotal);
-            calcularValoresSecundarios('warning', warningTotal);
-            calcularValoresSecundarios('exiting', exitingTotal);
-            calcularValoresSecundarios('exit', exitTotal);
-            
-            // Verificações e cálculos das outras tabelas
-            const campos = ['start', 'warning', 'exiting', 'exit'];
-            campos.forEach(campo => {
-                const total = campo === 'start' ? startTotal : parseInt(document.getElementById(`${campo}-total`).innerText) || 0;
-                
-                validarVerificacao(`verif-${campo}`, total, tick);
-                
-                const incr = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
-                validarVerificacao(`mult-${campo}`, incr, tick);
-                
-                const valorOriginal = total;
-                const secundario = parseFloat(document.getElementById(`${campo}-secundario`).value) || 0;
-                const incrementoTabela2 = incr;
-                const incrementoTotal = secundario + incrementoTabela2;
-                const totalFinal = valorOriginal + incrementoTotal;
-                
-                document.getElementById(`final-${campo}-orig`).innerText = valorOriginal;
-                document.getElementById(`final-${campo}-incr`).innerText = incrementoTotal;
-                document.getElementById(`final-${campo}-total`).innerText = totalFinal;
-                
-                validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
-            });
+        const tick = parseInt(document.getElementById('tick').value) || 1;
+        const tamanhoTotal = parseInt(document.getElementById('tamanho-total').value) || 0;
+        const startTotal = parseInt(document.getElementById('start-total').value) || 0;
+        
+        if (tick <= 0 || tamanhoTotal <= 0) return;
+        
+        // Calcula os valores totais automáticos
+        const exitTotal = startTotal + tamanhoTotal;
+        const exitingTotal = exitTotal - (2 * tick);
+        const warningTotal = Math.round(startTotal + (tamanhoTotal * 0.7));
+        
+        // Preenche os valores totais
+        if (!isNaN(warningTotal)) {
+            document.getElementById('warning-total').innerText = warningTotal;
+            togglePrimarioInput('warning', warningTotal);
         }
+        if (!isNaN(exitingTotal)) {
+            document.getElementById('exiting-total').innerText = exitingTotal;
+            togglePrimarioInput('exiting', exitingTotal);
+        }
+        if (!isNaN(exitTotal)) {
+            document.getElementById('exit-total').innerText = exitTotal;
+            togglePrimarioInput('exit', exitTotal);
+        }
+        
+        // Calcula os valores secundários
+        calcularValoresSecundarios('start', startTotal);
+        calcularValoresSecundarios('warning', warningTotal);
+        calcularValoresSecundarios('exiting', exitingTotal);
+        calcularValoresSecundarios('exit', exitTotal);
+        
+        // Verificações e cálculos das outras tabelas
+        const campos = ['start', 'warning', 'exiting', 'exit'];
+        campos.forEach(campo => {
+            const total = campo === 'start' ? startTotal : parseInt(document.getElementById(`${campo}-total`).innerText) || 0;
+            
+            validarVerificacao(`verif-${campo}`, total, tick);
+            
+            const incr = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
+            validarVerificacao(`mult-${campo}`, incr, tick);
+            
+            // Cálculos para Tabela 3
+            const valorOriginal = parseInt(document.getElementById(`${campo}-primario`).value) || 0; // Valor Primário da Tabela 1
+            const secundario = parseFloat(document.getElementById(`${campo}-secundario`).value.replace('+', '')) || 0; // Valor Secundário da Tabela 1
+            const incrementoTabela2 = incr; // Valor Incremento da Tabela 2
+            
+            // Cálculos conforme requisitos
+            const incrementoTotal = secundario + incrementoTabela2;
+            const totalFinal = total + incrementoTabela2; // Total da Tabela 1 + Valor Incremento da Tabela 2
+            
+            document.getElementById(`final-${campo}-orig`).innerText = valorOriginal;
+            document.getElementById(`final-${campo}-incr`).innerText = incrementoTotal;
+            document.getElementById(`final-${campo}-total`).innerText = totalFinal;
+            
+            validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
+        });
+    }
 
         function togglePrimarioInput(campo, total) {
             const primarioInput = document.getElementById(`${campo}-primario`);
@@ -342,10 +351,11 @@
         
         function salvarLog() {
             const nome = document.getElementById('nome').value;
+            const estacao = document.getElementById('estacao').value;
             const tick = document.getElementById('tick').value;
             const tamanhoTotal = document.getElementById('tamanho-total').value;
             
-            if (!nome || !tick || !tamanhoTotal || !document.getElementById('start-total').value) {
+            if (!nome || !estacao || !tick || !tamanhoTotal || !document.getElementById('start-total').value) {
                 showAlert('Preencha todos os campos obrigatórios!');
                 return;
             }
@@ -354,6 +364,7 @@
 
             const logData = {
                 nome: nome,
+                estacao: estacao,
                 tick: tick,
                 tamanhoTotal: tamanhoTotal,
                 tabelas: {}

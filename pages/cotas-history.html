@@ -1,255 +1,249 @@
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>CALCULADORA DE COTAS</title>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CALCULADORA DE COTAS</title>
+
+    <!--========== Import Scripts ==========-->
+    <script src="../scripts/html2canvas.js"></script>
+    <script src="../scripts/pdf.js"></script>
+
+    <!--========== BOX ICONS ==========-->
+    <link href="../../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/imagens/history.png" type="image/x-icon">
+
+    <!--========== CSS ==========-->
+    <link rel="stylesheet" href="../assets/css/reset.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../styles/cota-editor.css">
+</head>
+<body>
+
+    <header class='header' id="header-container"></header>
+    
+    <div class="container mt-4">
+    
+        <div class="mb-3">
+            <label class="form-label">Nome:</label>
+            <input type="text" class="form-control" id="nome" value="" disabled>
+        </div>
         
-            <!--========== Import Scripts ==========-->
-            <script src="../scripts/html2canvas.js"></script>
-            <script src="../scripts/pdf.js"></script>
+        <div class="mb-3">
+            <label class="form-label">Estação:</label>
+            <input type="text" class="form-control" id="estacao" value="" disabled>
+        </div>
         
-            <!--========== BOX ICONS ==========-->
-            <link href="../../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-            <link rel="shortcut icon" href="../assets/imagens/history.png" type="image/x-icon">
+        <div class="mb-3">
+            <label class="form-label">Tick da Linha:</label>
+            <input type="number" class="form-control" id="tick" value="" disabled>
+        </div>
         
-            <!--========== CSS ==========-->
-            <link rel="stylesheet" href="../assets/css/reset.css">
-            <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap-grid.min.css">
-            <link rel="stylesheet" href="../bootstrap-5.3.3-dist/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
-            <link rel="stylesheet" href="../styles/cota-editor.css">
-        </head>
-        <body>
+        <div class="mb-3">
+            <label class="form-label">Tamanho Total:</label>
+            <input type="number" class="form-control" id="tamanho-total" value="" disabled>
+        </div>
 
-            <header class='header' id="header-container"></header>
-            
-            <div class="container mt-4">
-            
-                <div class="mb-3">
-                    <label class="form-label">Nome:</label>
-                    <input type="text" class="form-control" id="nome" value="" disabled>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Estação:</label>
-                    <input type="text" class="form-control" id="estacao" value="" disabled>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Tick da Linha:</label>
-                    <input type="number" class="form-control" id="tick" value="" disabled>
-                </div>
-            
-                <!-- Tabela Pai -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped text-center tabela-pai">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Campo</th>
-                                <th>Valor Original</th>
-                                <th>Valor Secundário</th>
-                                <th>Total</th>
-                                <th>Verificação</th>
-                                <th>Insira o Incremento</th>
-                                <th>Multiplicador do Tick</th>
-                                <th>Valor Original</th>
-                                <th>Incremento</th>
-                                <th>Total</th>
-                                <th>Verificação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Start</td>
-                                <td class="border" id="start-orig" value=""></td>
-                                <td class="border" id="start-incr" value=""></td>
-                                <td class="border" id="total-start"></td>
-                                <td class="border" id="verif-start"></td>
-                                <td class="border" id="incr-start" value=""></td>
-                                <td id="mult-start"></td>
-                                <td id="final-start-orig"></td>
-                                <td id="final-start-incr" class='text-success1'></td>
-                                <td id="final-start-total"></td>
-                                <td id="final-start-verif"></td>
-                            </tr>
-                            <tr>
-                                <td>Warning</td>
-                                <td class="border" id="warning-orig" value=""></td>
-                                <td class="border" id="warning-incr" value=""></td>
-                                <td class="border" id="total-warning"></td>
-                                <td class="border" id="verif-warning"></td>
-                                <td class="border" id="incr-warning" value=""></td>
-                                <td id="mult-warning"></td>
-                                <td id="final-warning-orig"></td>
-                                <td id="final-warning-incr" class='text-success1'></td>
-                                <td id="final-warning-total"></td>
-                                <td id="final-warning-verif"></td>
-                            </tr>
-                            <tr>
-                                <td>Exiting</td>
-                                <td class="border" id="exiting-orig" value=""></td>
-                                <td class="border" id="exiting-incr" value=""></td>
-                                <td class="border" id="total-exiting"></td>
-                                <td class="border" id="verif-exiting"></td>
-                            
-                                <td class="border" id="incr-exiting" value=""></td>
-                                <td id="mult-exiting"></td>
-                            
-                                <td id="final-exiting-orig"></td>
-                                <td id="final-exiting-incr" class='text-success1'></td>
-                                <td id="final-exiting-total"></td>
-                                <td id="final-exiting-verif"></td>
-                            </tr>
-                            <tr>
-                                <td>End</td>
-                                <td class="border" id="end-orig" value=""></td>
-                                <td class="border" id="end-incr" value=""></td>
-                                <td class="border" id="total-end"></td>
-                                <td class="border" id="verif-end"></td>
-                                <td class="border" id="incr-end" value=""></td>
-                                <td id="mult-end"></td>
-                                <td id="final-end-orig"></td>
-                                <td id="final-end-incr" class='text-success1'></td>
-                                <td id="final-end-total"></td>
-                                <td id="final-end-verif"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            
-                <div class="upload-container">
-                    <span id="file-name" class="file-name" style="display: none;"></span>
-                    <label for="selecionar-log" class="upload-label">Selecionar Log</label>
-                    <input type="file" id="selecionar-log" accept=".json" hidden />
-                </div>
-                
-                
-            </div>
-            
-            <div id="custom-alert" class="custom-alert" style="display: none;">
-                <div class="alert-content">
-                    <span id="alert-message"></span>
-                    <button id="close-alert" onclick="closeAlert()">OK</button>
-                </div>
-            </div>
-            
-            <footer role="contentinfo">
-                Create WO 1.4.2 &copy; 2025, <a href="https://www.engdb.com.br/" target="_blank">Engineering.</a>
-            </footer>
-        
-            <script>
+        <!-- Tabela Pai -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center tabela-pai">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valor Original</th>
+                        <th>Valor Secundário</th>
+                        <th>Total</th>
+                        <th>Verificação</th>
+                        <th>Insira o Incremento</th>
+                        <th>Multiplicador do Tick</th>
+                        <th>Valor Original</th>
+                        <th>Incremento</th>
+                        <th>Total</th>
+                        <th>Verificação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Start</td>
+                        <td class="border" id="start-orig"></td>
+                        <td class="border" id="start-secundario"></td>
+                        <td class="border" id="total-start"></td>
+                        <td class="border" id="verif-start"></td>
+                        <td class="border" id="incr-start"></td>
+                        <td id="mult-start"></td>
+                        <td id="final-start-orig"></td>
+                        <td id="final-start-incr" class='text-success1'></td>
+                        <td id="final-start-total"></td>
+                        <td id="final-start-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>Warning</td>
+                        <td class="border" id="warning-orig"></td>
+                        <td class="border" id="warning-secundario"></td>
+                        <td class="border" id="total-warning"></td>
+                        <td class="border" id="verif-warning"></td>
+                        <td class="border" id="incr-warning"></td>
+                        <td id="mult-warning"></td>
+                        <td id="final-warning-orig"></td>
+                        <td id="final-warning-incr" class='text-success1'></td>
+                        <td id="final-warning-total"></td>
+                        <td id="final-warning-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>Exiting</td>
+                        <td class="border" id="exiting-orig"></td>
+                        <td class="border" id="exiting-secundario"></td>
+                        <td class="border" id="total-exiting"></td>
+                        <td class="border" id="verif-exiting"></td>
+                    
+                        <td class="border" id="incr-exiting"></td>
+                        <td id="mult-exiting"></td>
+                    
+                        <td id="final-exiting-orig"></td>
+                        <td id="final-exiting-incr" class='text-success1'></td>
+                        <td id="final-exiting-total"></td>
+                        <td id="final-exiting-verif"></td>
+                    </tr>
+                    <tr>
+                        <td>Exit</td>
+                        <td class="border" id="exit-orig"></td>
+                        <td class="border" id="exit-secundario"></td>
+                        <td class="border" id="total-exit"></td>
+                        <td class="border" id="verif-exit"></td>
+                        <td class="border" id="incr-exit"></td>
+                        <td id="mult-exit"></td>
+                        <td id="final-exit-orig"></td>
+                        <td id="final-exit-incr" class='text-success1'></td>
+                        <td id="final-exit-total"></td>
+                        <td id="final-exit-verif"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            // Insere o header no container
-            fetch("../components/header.html")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("header-container").innerHTML = data;
-            });
+        <div class="upload-container">
+            <span id="file-name" class="file-name" style="display: none;"></span>
+            <label for="selecionar-log" class="upload-label">Selecionar Log</label>
+            <input type="file" id="selecionar-log" accept=".json" hidden />
+        </div>
+    </div>
+    
+    <div id="custom-alert" class="custom-alert" style="display: none;">
+        <div class="alert-content">
+            <span id="alert-message"></span>
+            <button id="close-alert" onclick="closeAlert()">OK</button>
+        </div>
+    </div>
+    
+    <footer role="contentinfo">
+        Create WO 1.4.2 &copy; 2025, <a href="https://www.engdb.com.br/" target="_blank">Engineering.</a>
+    </footer>
 
-            document.getElementById("selecionar-log").addEventListener("change", function() {
-            const fileNameSpan = document.getElementById("file-name");
-            if (this.files.length > 0) {
-                fileNameSpan.textContent = this.files[0].name; // Define o nome do arquivo
-                fileNameSpan.style.display = "block"; // Exibe o nome do arquivo
-            } else {
-                fileNameSpan.style.display = "none"; // Oculta se não houver arquivo selecionado
-            }
-            });
+    <script>
+    // Insere o header no container
+    fetch("../components/header.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("header-container").innerHTML = data;
+    });
 
+    document.getElementById("selecionar-log").addEventListener("change", function() {
+        const fileNameSpan = document.getElementById("file-name");
+        if (this.files.length > 0) {
+            fileNameSpan.textContent = this.files[0].name;
+            fileNameSpan.style.display = "block";
+        } else {
+            fileNameSpan.style.display = "none";
+        }
+    });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputArquivo = document.getElementById("selecionar-log");
 
-            
-            document.addEventListener("DOMContentLoaded", function () {
-    const inputArquivo = document.getElementById("selecionar-log");
-
-    if (!inputArquivo) {
-        console.error("Elemento inputArquivo não encontrado no DOM.");
-        return;
-    }
-
-    function carregarArquivo(event) {
-        const file = event.target.files[0];
-        if (!file) {
-            alert("Nenhum arquivo selecionado.");
+        if (!inputArquivo) {
+            console.error("Elemento inputArquivo não encontrado no DOM.");
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            try {
-                const logData = JSON.parse(e.target.result);
-                console.log("Dados carregados:", logData);
-
-                // Preenchendo os campos principais
-                document.getElementById('nome').value = logData.nome || '';
-                document.getElementById('estacao').value = logData.estacao || '';
-                document.getElementById('tick').value = logData.tick || '';
-
-                const tick = parseInt(logData.tick) || 1;
-                const campos = ['start', 'warning', 'exiting', 'end'];
-
-                campos.forEach(campo => {
-                    // Preenchendo os valores nos elementos de tabela
-                    const tabela = logData.tabelas[campo];
-                    if (tabela) {
-                        setTextContent(`${campo}-orig`, tabela.orig);
-                        setTextContent(`${campo}-incr`, tabela.incr);
-                        setTextContent(`incr-${campo}`, tabela.incrExtra);
-
-                        setTextContent(`total-${campo}`, tabela.total);
-                        setTextContent(`mult-${campo}`, tabela.multTick);
-                        setTextContent(`final-${campo}-orig`, tabela.finalOrig);
-                        setTextContent(`final-${campo}-incr`, tabela.finalIncr);
-                        setTextContent(`final-${campo}-total`, tabela.finalTotal);
-
-                        // Aplicando as verificações
-                        validarVerificacao1(campo, tick, tabela.total);
-                        validarVerificacao2(campo, tick, tabela.finalTotal);
-                    }
-                });
-            } catch (error) {
-                console.error("Erro ao carregar o arquivo:", error);
-                alert("Erro ao carregar o arquivo. Verifique o formato JSON.");
+        function carregarArquivo(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                alert("Nenhum arquivo selecionado.");
+                return;
             }
-        };
 
-        reader.readAsText(file);
-    }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const logData = JSON.parse(e.target.result);
+                    console.log("Dados carregados:", logData);
 
-    // Função para definir o texto dentro das células da tabela
-    function setTextContent(id, value) {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-            elemento.textContent = value !== undefined ? value : '';
+                    // Preenchendo os campos principais
+                    document.getElementById('nome').value = logData.nome || '';
+                    document.getElementById('estacao').value = logData.estacao || '';
+                    document.getElementById('tick').value = logData.tick || '';
+                    document.getElementById('tamanho-total').value = logData.tamanhoTotal || '';
+
+                    const tick = parseInt(logData.tick) || 1;
+                    const campos = ['start', 'warning', 'exiting', 'exit'];
+
+                    campos.forEach(campo => {
+                        const tabela = logData.tabelas[campo];
+                        if (tabela) {
+                            // Tabela 1
+                            setTextContent(`${campo}-orig`, tabela.primario);
+                            setTextContent(`${campo}-secundario`, tabela.secundario);
+                            setTextContent(`total-${campo}`, tabela.total);
+                            setTextContent(`incr-${campo}`, tabela.incrExtra);
+                            
+                            // Verificações
+                            setVerification(`verif-${campo}`, tabela.verif);
+                            setVerification(`mult-${campo}`, tabela.multTick);
+                            
+                            // Tabela 3
+                            setTextContent(`final-${campo}-orig`, tabela.finalOrig);
+                            setTextContent(`final-${campo}-incr`, tabela.finalIncr);
+                            setTextContent(`final-${campo}-total`, tabela.finalTotal);
+                            setVerification(`final-${campo}-verif`, tabela.finalVerif);
+                        }
+                    });
+                } catch (error) {
+                    console.error("Erro ao carregar o arquivo:", error);
+                    alert("Erro ao carregar o arquivo. Verifique o formato JSON.");
+                }
+            };
+
+            reader.readAsText(file);
         }
-    }
 
-    // Primeira verificação (Tabela 1 - 5ª coluna): Verifica se TOTAL (3ª coluna) é múltiplo do Tick
-    function validarVerificacao1(campo, tick, total) {
-        const valorTotal = parseInt(total) || 0;
-        const ehMultiplo = valorTotal % tick === 0;
-        atualizarStatus(`verif-${campo}`, ehMultiplo);
-    }
-
-    // Segunda verificação (Tabela 3 - 5ª coluna): Verifica se TOTAL FINAL (4ª coluna da tabela 3) é múltiplo do Tick
-    function validarVerificacao2(campo, tick, finalTotal) {
-        const valorFinalTotal = parseInt(finalTotal) || 0;
-        const ehMultiplo = valorFinalTotal % tick === 0;
-        atualizarStatus(`final-${campo}-verif`, ehMultiplo);
-    }
-
-    function atualizarStatus(id, status) {
-        const elemento = document.getElementById(id);
-        if (elemento) {
-            elemento.textContent = status ? "OK" : "KO";
-            elemento.className = status ? "text-success fw-bold" : "text-danger fw-bold";
+        function setTextContent(id, value) {
+            const elemento = document.getElementById(id);
+            if (elemento) {
+                elemento.textContent = value !== undefined ? value : '';
+            }
         }
+
+        function setVerification(id, status) {
+            const elemento = document.getElementById(id);
+            if (elemento) {
+                elemento.textContent = status;
+                if (status === "OK") {
+                    elemento.className = "text-success1 border";
+                } else if (status === "KO") {
+                    elemento.className = "text-danger border";
+                } else {
+                    elemento.className = "border";
+                }
+            }
+        }
+
+        inputArquivo.addEventListener("change", carregarArquivo);
+    });
+
+    function closeAlert() {
+        document.getElementById('custom-alert').style.display = 'none';
     }
-
-    inputArquivo.addEventListener("change", carregarArquivo);
-});
-
-            </script>
-        
-        </body>
-        </html>
+    </script>
+</body>
+</html>
