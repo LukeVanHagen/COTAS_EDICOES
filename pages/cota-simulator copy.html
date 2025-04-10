@@ -20,6 +20,13 @@
     <link rel="stylesheet" href="../styles/cota-editor.css">
 
     <style>
+
+        .bg-success {
+            background-color: #d4edda !important;
+        }
+        .bg-danger {
+            background-color: #f8d7da !important;
+        }
         .text-success1 {
             color: #17d14f;
             font-weight: bold;
@@ -76,6 +83,11 @@
         <div class="mb-3">
             <label class="form-label">Nome:</label>
             <input type="text" class="form-control" id="nome" placeholder="Ex: João">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Estação:</label>
+            <input type="text" class="form-control" id="estacao" placeholder="Ex: WPA_S001_Tl100_3">
         </div>
         
         <div class="mb-3">
@@ -172,6 +184,7 @@
                     </tr>
                 </tbody>
             </table>
+            <button onclick="salvarLog()" class="btn btn-primary">Salvar Log</button>
         </div>
     </div>
     
@@ -278,6 +291,20 @@
             document.getElementById(`final-${campo}-total`).innerText = totalFinal;
             
             validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
+
+                    // Verificação da Tabela 3 (última verificação)
+                    const verifCellTabela3 = document.getElementById(`final-${campo}-verif`);
+                    const linhaCompleta = verifCellTabela3.closest('tr');
+                    
+                    // Resetar classes
+                    linhaCompleta.classList.remove('bg-success', 'bg-danger');
+                    
+                    // Aplicar cor com base na verificação da Tabela 3
+                    if (verifCellTabela3.innerText === 'KO') {
+                        linhaCompleta.classList.add('bg-danger');
+                    } else if (verifCellTabela3.innerText === 'OK') {
+                        linhaCompleta.classList.add('bg-success');
+                    }
         });
     }
 
@@ -332,6 +359,7 @@
                 elemento.innerText = 'KO';
                 elemento.className = 'text-danger border';
             }
+            
         }
         
         function showAlert(message) {
@@ -345,10 +373,11 @@
         
         function salvarLog() {
             const nome = document.getElementById('nome').value;
+            const estacao = document.getElementById('estacao').value;
             const tick = document.getElementById('tick').value;
             const tamanhoTotal = document.getElementById('tamanho-total').value;
             
-            if (!nome || !tick || !tamanhoTotal || !document.getElementById('start-total').value) {
+            if (!nome || !estacao || !tick || !tamanhoTotal || !document.getElementById('start-total').value) {
                 showAlert('Preencha todos os campos obrigatórios!');
                 return;
             }
@@ -357,6 +386,7 @@
 
             const logData = {
                 nome: nome,
+                estacao: estacao,
                 tick: tick,
                 tamanhoTotal: tamanhoTotal,
                 tabelas: {}

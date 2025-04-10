@@ -20,6 +20,38 @@
     <link rel="stylesheet" href="../styles/cota-editor.css">
 
     <style>
+        
+        .tooltip-cell {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip-cell .tooltip-text {
+            visibility: hidden;
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: fixed;  /* Mudado para fixed */
+            z-index: 9999;    /* Garante que fique acima de tudo */
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            pointer-events: none; /* Permite clicar através do tooltip */
+        }
+
+        .tooltip-cell:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .bg-success {
+            background-color: #d4edda !important;
+        }
+        .bg-danger {
+            background-color: #f8d7da !important;
+        }
         .text-success1 {
             color: #17d14f;
             font-weight: bold;
@@ -52,7 +84,7 @@
         #close-alert {
             margin-top: 10px;
             padding: 5px 15px;
-            background-color: #007bff;
+            background-color: #243782;
             color: white;
             border: none;
             border-radius: 3px;
@@ -229,62 +261,105 @@
         });
 
         function calcularCotas() {
-        const tick = parseInt(document.getElementById('tick').value) || 1;
-        const tamanhoTotal = parseInt(document.getElementById('tamanho-total').value) || 0;
-        const startTotal = parseInt(document.getElementById('start-total').value) || 0;
+    const tick = parseInt(document.getElementById('tick').value) || 1;
+    const tamanhoTotal = parseInt(document.getElementById('tamanho-total').value) || 0;
+    const startTotal = parseInt(document.getElementById('start-total').value) || 0;
+    
+    if (tick <= 0 || tamanhoTotal <= 0) return;
+    
+    // Calcula os valores totais automáticos
+    const exitTotal = startTotal + tamanhoTotal;
+    const exitingTotal = exitTotal - (2 * tick);
+    const warningTotal = Math.round(startTotal + (tamanhoTotal * 0.7));
+    
+    // Preenche os valores totais
+    if (!isNaN(warningTotal)) {
+        document.getElementById('warning-total').innerText = warningTotal;
+        togglePrimarioInput('warning', warningTotal);
+    }
+    if (!isNaN(exitingTotal)) {
+        document.getElementById('exiting-total').innerText = exitingTotal;
+        togglePrimarioInput('exiting', exitingTotal);
+    }
+    if (!isNaN(exitTotal)) {
+        document.getElementById('exit-total').innerText = exitTotal;
+        togglePrimarioInput('exit', exitTotal);
+    }
+    
+    // Calcula os valores secundários
+    calcularValoresSecundarios('start', startTotal);
+    calcularValoresSecundarios('warning', warningTotal);
+    calcularValoresSecundarios('exiting', exitingTotal);
+    calcularValoresSecundarios('exit', exitTotal);
+    
+    // Verificações e cálculos das tabelas
+    const campos = ['start', 'warning', 'exiting', 'exit'];
+    campos.forEach(campo => {
+        const totalTabela1 = campo === 'start' ? startTotal : parseInt(document.getElementById(`${campo}-total`).innerText) || 0;
+        const incrementoTabela2 = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
+        const totalFinal = totalTabela1 + incrementoTabela2;
         
-        if (tick <= 0 || tamanhoTotal <= 0) return;
+        // Verificação Tabela 1
+        validarVerificacao(`verif-${campo}`, totalTabela1, tick);
         
-        // Calcula os valores totais automáticos
-        const exitTotal = startTotal + tamanhoTotal;
-        const exitingTotal = exitTotal - (2 * tick);
-        const warningTotal = Math.round(startTotal + (tamanhoTotal * 0.7));
+        // Verificação Tabela 2
+        validarVerificacao(`mult-${campo}`, incrementoTabela2, tick);
         
-        // Preenche os valores totais
-        if (!isNaN(warningTotal)) {
-            document.getElementById('warning-total').innerText = warningTotal;
-            togglePrimarioInput('warning', warningTotal);
+        // Cálculos Tabela 3
+        const valorOriginal = parseInt(document.getElementById(`${campo}-primario`).value) || 0;
+        const secundario = parseFloat(document.getElementById(`${campo}-secundario`).value.replace('+', '')) || 0;
+        const incrementoTotal = secundario + incrementoTabela2;
+        
+        document.getElementById(`final-${campo}-orig`).innerText = valorOriginal;
+        document.getElementById(`final-${campo}-incr`).innerText = incrementoTotal;
+        document.getElementById(`final-${campo}-total`).innerText = totalFinal;
+        
+        // Verificação Tabela 3
+        validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
+        
+        // Cálculo do ajuste necessário para Tabela 3
+        const verifCellTabela3 = document.getElementById(`final-${campo}-verif`);
+        if (verifCellTabela3 && verifCellTabela3.innerText === 'KO') {
+            const diff = totalFinal % tick;
+            const adjustValue1 = tick - diff;  // Valor para somar
+            const adjustValue2 = -diff;       // Valor para subtrair
+            
+            const tooltip = verifCellTabela3.querySelector('.tooltip-text');
+            if (tooltip) {
+                if (Math.abs(adjustValue1) === Math.abs(adjustValue2)) {
+                    tooltip.textContent = `Adicione ${adjustValue1} ou subtraia ${Math.abs(adjustValue2)} para ficar no tick`;
+                } else {
+                    const bestAdjust = Math.abs(adjustValue1) < Math.abs(adjustValue2) ? adjustValue1 : adjustValue2;
+                    tooltip.textContent = bestAdjust > 0 ? 
+                        `Adicione ${bestAdjust} para ficar no tick` :
+                        `Subtraia ${Math.abs(bestAdjust)} para ficar no tick`;
+                }
+                tooltip.style.width = '240px';
+            }
         }
-        if (!isNaN(exitingTotal)) {
-            document.getElementById('exiting-total').innerText = exitingTotal;
-            togglePrimarioInput('exiting', exitingTotal);
-        }
-        if (!isNaN(exitTotal)) {
-            document.getElementById('exit-total').innerText = exitTotal;
-            togglePrimarioInput('exit', exitTotal);
-        }
         
-        // Calcula os valores secundários
-        calcularValoresSecundarios('start', startTotal);
-        calcularValoresSecundarios('warning', warningTotal);
-        calcularValoresSecundarios('exiting', exitingTotal);
-        calcularValoresSecundarios('exit', exitTotal);
+        // Aplicar cor na linha completa baseado na Tabela 3
+        const linhaCompleta = verifCellTabela3.closest('tr');
+        linhaCompleta.classList.remove('bg-success', 'bg-danger');
         
-        // Verificações e cálculos das outras tabelas
-        const campos = ['start', 'warning', 'exiting', 'exit'];
-        campos.forEach(campo => {
-            const total = campo === 'start' ? startTotal : parseInt(document.getElementById(`${campo}-total`).innerText) || 0;
-            
-            validarVerificacao(`verif-${campo}`, total, tick);
-            
-            const incr = parseInt(document.getElementById(`incr-${campo}`).value) || 0;
-            validarVerificacao(`mult-${campo}`, incr, tick);
-            
-            // Cálculos para Tabela 3
-            const valorOriginal = parseInt(document.getElementById(`${campo}-primario`).value) || 0; // Valor Primário da Tabela 1
-            const secundario = parseFloat(document.getElementById(`${campo}-secundario`).value.replace('+', '')) || 0; // Valor Secundário da Tabela 1
-            const incrementoTabela2 = incr; // Valor Incremento da Tabela 2
-            
-            // Cálculos conforme requisitos
-            const incrementoTotal = secundario + incrementoTabela2;
-            const totalFinal = total + incrementoTabela2; // Total da Tabela 1 + Valor Incremento da Tabela 2
-            
-            document.getElementById(`final-${campo}-orig`).innerText = valorOriginal;
-            document.getElementById(`final-${campo}-incr`).innerText = incrementoTotal;
-            document.getElementById(`final-${campo}-total`).innerText = totalFinal;
-            
-            validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
-        });
+        if (verifCellTabela3.innerText === 'KO') {
+            linhaCompleta.classList.add('bg-danger');
+        } else if (verifCellTabela3.innerText === 'OK') {
+            linhaCompleta.classList.add('bg-success');
+        }
+    });
+                // Para a Tabela 3, calcula o ajuste necessário
+                if (document.getElementById(`final-${campo}-verif`).innerText === 'KO') {
+                    const totalFinal = parseInt(document.getElementById(`final-${campo}-total`).innerText) || 0;
+                    const diff = totalFinal % tick;
+                    const adjustValue = diff > tick/2 ? tick - diff : -diff;
+                    
+                    const tooltip = document.querySelector(`#final-${campo}-verif .tooltip-text`);
+                    if (tooltip) {
+                        tooltip.textContent = `O total não está no tick. ${adjustValue > 0 ? 'Adicione' : 'Subtraia'} ${Math.abs(adjustValue)} para corrigir`;
+                    }
+                }
+        
     }
 
         function togglePrimarioInput(campo, total) {
@@ -338,6 +413,41 @@
                 elemento.innerText = 'KO';
                 elemento.className = 'text-danger border';
             }
+
+            // Configuração inicial do tooltip
+            elemento.classList.add('tooltip-cell');
+            const existingTooltip = elemento.querySelector('.tooltip-text');
+            if (existingTooltip) existingTooltip.remove();
+            
+            if (valor === 0 && (elementoId.includes('mult-') || elementoId.includes('verif-'))) {
+                elemento.innerText = '';
+                elemento.className = 'border tooltip-cell';
+                return;
+            }
+            
+            const tooltip = document.createElement('span');
+            tooltip.className = 'tooltip-text';
+            
+            if (tick > 0 && valor % tick === 0) {
+                elemento.innerText = 'OK';
+                elemento.className = 'text-success1 border tooltip-cell';
+            } else {
+                elemento.innerText = 'KO';
+                elemento.className = 'text-danger border tooltip-cell';
+                
+                // Mensagens personalizadas para cada tipo de verificação
+                if (elementoId.includes('verif-')) {
+                    tooltip.textContent = "O valor total não está no tick";
+                } else if (elementoId.includes('mult-')) {
+                    tooltip.textContent = "O valor do incremento não está no tick";
+                } else if (elementoId.includes('final-')) {
+                    // Esta mensagem será atualizada na função calcularCotas
+                    tooltip.textContent = "Calculando ajuste necessário...";
+                }
+                
+                elemento.appendChild(tooltip);
+            }
+            
         }
         
         function showAlert(message) {
@@ -355,11 +465,35 @@
             const tick = document.getElementById('tick').value;
             const tamanhoTotal = document.getElementById('tamanho-total').value;
             
+            // Verifica campos obrigatórios
             if (!nome || !estacao || !tick || !tamanhoTotal || !document.getElementById('start-total').value) {
                 showAlert('Preencha todos os campos obrigatórios!');
                 return;
             }
             
+            // Verifica se há algum KO na Tabela 3
+            const campos = ['start', 'warning', 'exiting', 'exit'];
+            const errosTabela3 = campos.filter(campo => {
+                const verif = document.getElementById(`final-${campo}-verif`).innerText;
+                return verif === 'KO';
+            });
+            
+            if (errosTabela3.length > 0) {
+                const camposComErro = errosTabela3.map(c => {
+                    switch(c) {
+                        case 'start': return 'Start';
+                        case 'warning': return 'Warning';
+                        case 'exiting': return 'Exiting';
+                        case 'exit': return 'Exit';
+                        default: return c;
+                    }
+                }).join(', ');
+                
+                showAlert(`Não é possível salvar enquanto existirem erros nas configurações de cota!\n\nVerifique os seguintes campos: ${camposComErro}`);
+                return;
+            }
+            
+            // Prossegue com o salvamento se não houver erros
             const data = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
 
             const logData = {
@@ -370,7 +504,7 @@
                 tabelas: {}
             };
 
-            ['start', 'warning', 'exiting', 'exit'].forEach(campo => {
+            campos.forEach(campo => {
                 logData.tabelas[campo] = {
                     primario: document.getElementById(`${campo}-primario`).value,
                     secundario: document.getElementById(`${campo}-secundario`).value,
@@ -392,6 +526,35 @@
             a.download = nomeArquivo;
             a.click();
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    document.body.addEventListener('mousemove', function(e) {
+        const tooltips = document.querySelectorAll('.tooltip-text');
+        tooltips.forEach(tooltip => {
+            if (tooltip.parentElement.classList.contains('hover')) {
+                // Posiciona o tooltip 20px acima do cursor
+                tooltip.style.left = (e.clientX - 110) + 'px'; // Centraliza
+                tooltip.style.top = (e.clientY - 40) + 'px';
+            }
+        });
+    });
+
+            // Adiciona classe hover quando o mouse entra
+            const tooltipCells = document.querySelectorAll('.tooltip-cell');
+            tooltipCells.forEach(cell => {
+                cell.addEventListener('mouseenter', function() {
+                    this.classList.add('hover');
+                    const tooltip = this.querySelector('.tooltip-text');
+                    if (tooltip) tooltip.style.display = 'block';
+                });
+                
+                cell.addEventListener('mouseleave', function() {
+                    this.classList.remove('hover');
+                    const tooltip = this.querySelector('.tooltip-text');
+                    if (tooltip) tooltip.style.display = 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>
