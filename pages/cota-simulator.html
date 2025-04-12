@@ -267,12 +267,35 @@
     
     if (tick <= 0 || tamanhoTotal <= 0) return;
     
-    // Calcula os valores totais automáticos
-    const exitTotal = startTotal + tamanhoTotal;
-    const exitingTotal = exitTotal - (2 * tick);
-    const warningTotal = Math.round(startTotal + (tamanhoTotal * 0.7));
+    // Função para ajustar um valor para o tick mais próximo (arredondando para cima)
+    const ajustarParaTick = (valor, tick) => {
+        if (tick === 0) return valor;
+        const resto = valor % tick;
+        if (resto === 0) return valor;
+        
+        // Calcula as duas possibilidades mais próximas
+        const valorAcima = valor + (tick - resto);
+        const valorAbaixo = valor - resto;
+        
+        // Decide qual é o mais próximo do valor original
+        const diffAcima = valorAcima - valor;
+        const diffAbaixo = valor - valorAbaixo;
+        
+        // Retorna o valor mais próximo, ou o de cima em caso de empate
+        return (diffAbaixo < diffAcima) ? valorAbaixo : valorAcima;
+    };
+
+    // Calcula os valores totais automáticos e já ajusta para o tick
+    const exitTotalBruto = startTotal + tamanhoTotal;
+    const exitTotal = ajustarParaTick(exitTotalBruto, tick);
     
-    // Preenche os valores totais
+    const exitingTotalBruto = exitTotal - (2 * tick);
+    const exitingTotal = ajustarParaTick(exitingTotalBruto, tick);
+    
+    const warningTotalBruto = Math.round(startTotal + (tamanhoTotal * 0.7));
+    const warningTotal = ajustarParaTick(warningTotalBruto, tick);
+    
+    // Preenche os valores totais (agora já ajustados para o tick)
     if (!isNaN(warningTotal)) {
         document.getElementById('warning-total').innerText = warningTotal;
         togglePrimarioInput('warning', warningTotal);
@@ -286,13 +309,13 @@
         togglePrimarioInput('exit', exitTotal);
     }
     
-    // Calcula os valores secundários
+    // Calcula os valores secundários (mantendo a lógica original)
     calcularValoresSecundarios('start', startTotal);
     calcularValoresSecundarios('warning', warningTotal);
     calcularValoresSecundarios('exiting', exitingTotal);
     calcularValoresSecundarios('exit', exitTotal);
     
-    // Verificações e cálculos das tabelas
+    // Verificações e cálculos das tabelas (mantendo toda a lógica existente)
     const campos = ['start', 'warning', 'exiting', 'exit'];
     campos.forEach(campo => {
         const totalTabela1 = campo === 'start' ? startTotal : parseInt(document.getElementById(`${campo}-total`).innerText) || 0;
@@ -317,7 +340,7 @@
         // Verificação Tabela 3
         validarVerificacao(`final-${campo}-verif`, totalFinal, tick);
         
-        // Cálculo do ajuste necessário para Tabela 3
+        // Cálculo do ajuste necessário para Tabela 3 (mantido para caso o usuário modifique manualmente)
         const verifCellTabela3 = document.getElementById(`final-${campo}-verif`);
         if (verifCellTabela3 && verifCellTabela3.innerText === 'KO') {
             const diff = totalFinal % tick;
@@ -348,6 +371,7 @@
             linhaCompleta.classList.add('bg-success');
         }
     });
+
                 // Para a Tabela 3, calcula o ajuste necessário
                 if (document.getElementById(`final-${campo}-verif`).innerText === 'KO') {
                     const totalFinal = parseInt(document.getElementById(`final-${campo}-total`).innerText) || 0;
